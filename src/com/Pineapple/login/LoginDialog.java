@@ -4,6 +4,7 @@ import java.awt.*;
 
 import java.awt.event.*;
 import javax.swing.*;
+import com.Pineapple.*;
 
 //登录对话框类
 public class LoginDialog extends JFrame {
@@ -16,13 +17,13 @@ public class LoginDialog extends JFrame {
 	private JButton loginButton = null;
 	private JButton exitButton = null;
 	private static String userStr;
-	//private MainFrame mainFrame;//主框架类
+	private MainFrame mainFrame;//主框架类
 	
 	//构造方法
 	public LoginDialog() {
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());//设置界面效果
-			//mainFrame = new MainFrame();//构造主框架
+			mainFrame = new MainFrame();//构造主框架
 			initialize();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -40,11 +41,11 @@ public class LoginDialog extends JFrame {
 			
 			//label的初始化在此完成，因为不经常改动
 			jLabel1 = new JLabel();
-			jLabel1.setBounds(new Rectangle(86, 71, 55, 18));
+			jLabel1.setBounds(new Rectangle(86, 71, 80, 18));
 			jLabel1.setText("Password：");//密码
 			jLabel = new JLabel();
 			jLabel.setText("Username：");//用户名
-			jLabel.setBounds(new Rectangle(85, 41, 56, 18));
+			jLabel.setBounds(new Rectangle(85, 41, 80, 18));
 			
 			loginPanel = new LoginPanel();//此时panel上只包含背景图片
 			loginPanel.setLayout(null);//设置panel的布局方式
@@ -70,7 +71,7 @@ public class LoginDialog extends JFrame {
 	private JTextField getUserField() {
 		if (userField == null) {
 			userField = new JTextField();
-			userField.setBounds(new Rectangle(142, 39, 127, 22));
+			userField.setBounds(new Rectangle(150, 39, 120, 22));
 		}
 		return userField;
 	}
@@ -83,7 +84,7 @@ public class LoginDialog extends JFrame {
 	private JPasswordField getPasswordField() {
 		if (passwordField == null) {
 			passwordField = new JPasswordField();
-			passwordField.setBounds(new Rectangle(143, 69, 125, 22));
+			passwordField.setBounds(new Rectangle(150, 69, 120, 22));
 			//键盘监听密码输入区，当键入回车时执行等同于单击login按钮的动作
 			passwordField.addKeyListener(new KeyAdapter() {
 				public void keyTyped(KeyEvent e) {
