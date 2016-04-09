@@ -13,7 +13,7 @@ public class MainFrame extends JFrame {
 	private JPanel frameContentPane = null;
 	private MenuBar frameMenuBar = null;
 	//private ToolBar toolBar = null;
-	//private DesktopPanel desktopPane = null;
+	private DesktopPanel desktopPane = null;
 	private JPanel statePanel = null;
 	private JLabel stateLabel = null;
 	private JLabel nameLabel = null;
@@ -71,12 +71,12 @@ public class MainFrame extends JFrame {
 	 * 
 	 * @return JDesktopPane
 	 */
-	/*private DesktopPanel getDesktopPane() {
+	private DesktopPanel getDesktopPane() {
 		if (desktopPane == null) {
 			desktopPane = new DesktopPanel();
 		}
 		return desktopPane;
-	}*/
+	}
 	
 	/**
 	 * This method initializes statePanel
@@ -110,7 +110,7 @@ public class MainFrame extends JFrame {
 			gridBagConstraints2.weightx = 0.0;
 			gridBagConstraints2.fill = GridBagConstraints.NONE;
 			gridBagConstraints2.gridy = 0;
-			nameLabel = new JLabel("吉林省铭泰××有限公司   ");
+			nameLabel = new JLabel("Pineapple Computer Company   ");
 			GridBagConstraints gridBagConstraints1 = new GridBagConstraints();
 			gridBagConstraints1.gridx = 4;
 			gridBagConstraints1.fill = GridBagConstraints.VERTICAL;
@@ -146,7 +146,7 @@ public class MainFrame extends JFrame {
 	public JLabel getStateLabel() {
 		if (stateLabel == null) {
 			stateLabel = new JLabel();
-			stateLabel.setText("当前没有选定窗体");
+			stateLabel.setText("No window choosed");
 		}
 		return stateLabel;
 	}
@@ -205,7 +205,7 @@ public class MainFrame extends JFrame {
 		this.setSize(800, 600);
 	//	this.setJMenuBar(getFrameMenuBar());
 		this.setContentPane(getFrameContentPane());
-		this.setTitle("铭泰企业进销存管理系统");
+		this.setTitle("Pineapple Management System");
 	}
 	
 	/**
@@ -219,7 +219,7 @@ public class MainFrame extends JFrame {
 			frameContentPane.setLayout(new BorderLayout());
 			frameContentPane.add(getStatePanel(), SOUTH);
 	//		frameContentPane.add(getJJToolBarBar(), NORTH);
-	//		frameContentPane.add(getDesktopPane(), CENTER);
+			frameContentPane.add(getDesktopPane(), CENTER);
 		}
 		return frameContentPane;
 	}

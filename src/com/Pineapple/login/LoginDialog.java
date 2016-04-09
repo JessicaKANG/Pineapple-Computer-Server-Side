@@ -1,13 +1,16 @@
 package com.Pineapple.login;
 
 import java.awt.*;
-
 import java.awt.event.*;
 import javax.swing.*;
 import com.Pineapple.*;
 
 //登录对话框类
 public class LoginDialog extends JFrame {
+	
+	private String USERNAME = "Admin";
+	private String PASSWORD = "1234";
+	
 	private static final long serialVersionUID = 1L;
 	private LoginPanel loginPanel = null;
 	private JLabel jLabel = null;
@@ -18,6 +21,7 @@ public class LoginDialog extends JFrame {
 	private JButton exitButton = null;
 	private static String userStr;
 	private MainFrame mainFrame;//主框架类
+
 	
 	//构造方法
 	public LoginDialog() {
@@ -108,18 +112,34 @@ public class LoginDialog extends JFrame {
 			loginButton.setIcon(new ImageIcon(getClass().getResource(
 					"/res/loginButton.jpg")));//设置登录按钮图标
 			//为登录按钮增加事件监听，监听方法是：提取用户名输入字符串；提取用户密码字符串；向数据库对比用户名和密码
-			/*loginButton.addActionListener(new ActionListener() {
+			loginButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					try {
 						userStr = userField.getText();
 						String passStr = new String(passwordField
 								.getPassword());
-						if (!Dao.checkLogin(userStr, passStr)) {
+						//验证用户名
+						if (!userStr.equals(USERNAME)){
+							JOptionPane.showMessageDialog(LoginDialog.this,
+									"Username is incorrect!", "Login failed",
+									JOptionPane.ERROR_MESSAGE);
+							return;
+								
+						}
+						//验证密码
+						if (!passStr.equals(PASSWORD)){
+							JOptionPane.showMessageDialog(LoginDialog.this,
+									"Password is incorrect!", "Login failed",
+									JOptionPane.ERROR_MESSAGE);
+							return;
+								
+						}
+					/*	if (!Dao.checkLogin(userStr, passStr)) {
 							JOptionPane.showMessageDialog(LoginDialog.this,
 									"用户名与密码无法登录", "登录失败",
 									JOptionPane.ERROR_MESSAGE);
 							return;
-						}
+						}*/
 					} catch (Exception e1) {
 						e1.printStackTrace();
 					}
@@ -130,7 +150,7 @@ public class LoginDialog extends JFrame {
 					setVisible(false);//关闭主框架
 				}
 			});
-			*/
+			
 		}
 		return loginButton;
 	}
