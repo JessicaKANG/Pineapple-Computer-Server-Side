@@ -42,7 +42,7 @@ public class ToolBar extends JToolBar {
 
 	/**
 	 * 创建工具栏按钮的方法
-	 * 
+	 * 名称、图标、监听全都来自菜单项
 	 * @return javax.swing.JButton
 	 */
 	private JButton createToolButton(final JMenuItem item) {

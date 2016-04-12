@@ -1,4 +1,5 @@
 package com.Pineapple;
+import com.Pineapple.iframe.*;
 
 import java.awt.Desktop;
 import java.awt.Dimension;
@@ -8,9 +9,11 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyVetoException;
+import java.lang.reflect.Constructor;
 import java.net.URI;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.ImageIcon;
 import javax.swing.JDesktopPane;
@@ -19,6 +22,8 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.event.InternalFrameAdapter;
+import javax.swing.event.InternalFrameEvent;
 import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
 
@@ -78,6 +83,15 @@ public class MenuBar extends JMenuBar {
 	 * 容纳内部窗体的桌面面板
 	 */
 	private JDesktopPane desktopPanel = null;
+	/**
+	 * 内部窗体的集合（菜单项，内部窗体）映射哈希表
+	 */
+	private Map<JMenuItem, JInternalFrame> iFrames = null;
+	/**
+	 * 内部窗体的位置坐标
+	 */
+	private int nextFrameX, nextFrameY;
+
 ///////////////////////////////////////////////////////////////////
 
 	/**
@@ -89,9 +103,9 @@ public class MenuBar extends JMenuBar {
 //初始化菜单栏界面的方法
 	public MenuBar(JDesktopPane desktopPanel, JLabel label) {
 		super();
-		//iFrames = new HashMap<JMenuItem, JInternalFrame>(); 一个菜单项与内部窗口映射的哈希表
+		iFrames = new HashMap<JMenuItem, JInternalFrame>(); //一个菜单项与内部窗口映射的哈希表
 		this.desktopPanel = desktopPanel;
-		//this.stateLabel = label;
+		this.stateLabel = label;
 		initialize();
 	}
 
@@ -280,6 +294,65 @@ public class MenuBar extends JMenuBar {
 		return checkstockItem;
 	}
 ///////////////////////////////////////////////////////////////////////////////////////////////
-	
+	/**
+	 * 创建内部窗体的方法，该方法使用发射技术获取内部窗体的构造方法，从而创建内部窗体。
+	 * 
+	 * @param item：激活该内部窗体的菜单项
+	 * @param clazz：内部窗体的Class对象
+	 */
+	private JInternalFrame createIFrame(JMenuItem item, Class clazz) {
+		Constructor constructor = clazz.getConstructors()[0];//获取内部窗体的构造器
+		JInternalFrame iFrame = iFrames.get(item);//以菜单项为key，查找对应的内部窗体
+		try {
+			//如果不存在当前窗体，或者窗体处于关闭状态，就执行以下操作
+			if (iFrame == null || iFrame.isClosed()) {
+				iFrame = (JInternalFrame) constructor
+						.newInstance(new Object[] {});//使用内部窗体构造器，构造一个新窗体
+				iFrames.put(item, iFrame);//把新窗体至于内部窗体哈希表中
+				iFrame.setFrameIcon(item.getIcon());//内部窗体图标取自菜单项图标
+				iFrame.setLocation(nextFrameX, nextFrameY);//设置内部窗体位置
+				////////////////////////////////////////////////////////////////////////////////
+				int frameH = iFrame.getPreferredSize().height;//获取内部窗体高度
+				int panelH = iFrame.getContentPane().getPreferredSize().height;//获取桌面高度
+				//设置下一个内部窗口打开位置，避免窗口重叠看不到的现象
+				int fSpacing = frameH - panelH;
+				nextFrameX += fSpacing;
+				nextFrameY += fSpacing;
+				if (nextFrameX + iFrame.getWidth() > desktopPanel.getWidth())
+					nextFrameX = 0;
+				if (nextFrameY + iFrame.getHeight() > desktopPanel.getHeight())
+					nextFrameY = 0;
+				/////////////////////////////////////////////////////////////////////////////////
+				desktopPanel.add(iFrame);//把内部窗口放到桌面上
+				iFrame.setResizable(false);//内部窗体大小不可改变
+				iFrame.setMaximizable(false);//内部窗体不能最大化
+				iFrame.setVisible(true);//使内部窗体可见
+			}
+			//如果已存在当前窗体，或者执行完创建操作后，就执行以下操作
+			iFrame.setSelected(true);//使当前窗体处于被选中状态
+			stateLabel.setText(iFrame.getTitle());//把状态栏中的标签设置成当前窗体名字
+			//为当前内部窗体添加监听
+			iFrame.addInternalFrameListener(new InternalFrameAdapter() {
+				/**
+				 * 内部窗体的激活方法，获取内部窗口，并将状态栏标签设置为内部窗口名称
+				 */
+				public void internalFrameActivated(InternalFrameEvent e) {
+					super.internalFrameActivated(e);
+					JInternalFrame frame = e.getInternalFrame();
+					stateLabel.setText(frame.getTitle());
+				}
+				/**
+				 * 内部窗体的最小化方法，状态栏标签更改为“未选择窗口”
+				 */
+				public void internalFrameDeactivated(InternalFrameEvent e) {
+					stateLabel.setText("No window choosed");
+				}
+			});
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return iFrame;
+	}
+
 	
 }
