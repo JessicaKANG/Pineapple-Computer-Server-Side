@@ -36,7 +36,7 @@ public class LoginDialog extends JFrame {
 	
 	
 	/**
-	 * 初始化loginPanel登录面板的方法, 向空面板添加留个组件
+	 * 初始化loginPanel登录面板的方法, 向空面板添加6个组件
 	 * 
 	 * @return com.Pineapple.login.LoginPanel，返回登录面板
 	 */
@@ -121,7 +121,7 @@ public class LoginDialog extends JFrame {
 						//验证用户名
 						if (!userStr.equals(USERNAME)){
 							JOptionPane.showMessageDialog(LoginDialog.this,
-									"Username is incorrect!", "Login failed",
+									"Username Error", "Login failed",
 									JOptionPane.ERROR_MESSAGE);
 							return;
 								
@@ -129,17 +129,12 @@ public class LoginDialog extends JFrame {
 						//验证密码
 						if (!passStr.equals(PASSWORD)){
 							JOptionPane.showMessageDialog(LoginDialog.this,
-									"Password is incorrect!", "Login failed",
+									"Password Error", "Login failed",
 									JOptionPane.ERROR_MESSAGE);
 							return;
 								
 						}
-					/*	if (!Dao.checkLogin(userStr, passStr)) {
-							JOptionPane.showMessageDialog(LoginDialog.this,
-									"用户名与密码无法登录", "登录失败",
-									JOptionPane.ERROR_MESSAGE);
-							return;
-						}*/
+					
 					} catch (Exception e1) {
 						e1.printStackTrace();
 					}

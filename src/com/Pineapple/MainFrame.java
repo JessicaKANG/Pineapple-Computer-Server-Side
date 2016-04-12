@@ -12,7 +12,7 @@ public class MainFrame extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel frameContentPane = null;
 	private MenuBar frameMenuBar = null;
-	//private ToolBar toolBar = null;
+	private ToolBar toolBar = null;
 	private DesktopPanel desktopPane = null;
 	private JPanel statePanel = null;
 	private JLabel stateLabel = null;
@@ -46,25 +46,25 @@ public class MainFrame extends JFrame {
 	 * 
 	 * @return JToolBar
 	 */
-	/*private ToolBar getJJToolBarBar() {
+	private ToolBar getJJToolBarBar() {
 		if (toolBar == null) {
 			toolBar = new ToolBar(getFrameMenuBar());
 			toolBar.setCursor(new Cursor(Cursor.HAND_CURSOR));
 		}
 		return toolBar;
-	}*/
+	}
 	
 	/**
 	 * 初始化窗体菜单栏的方法
 	 * 
 	 * @return JMenuBar
 	 */
-	/*protected MenuBar getFrameMenuBar() {
+	protected MenuBar getFrameMenuBar() {
 		if (frameMenuBar == null) {
 			frameMenuBar = new MenuBar(getDesktopPane(), getStateLabel());
 		}
 		return frameMenuBar;
-	}*/
+	}
 	
 	/**
 	 * This method initializes desktopPane
@@ -203,7 +203,7 @@ public class MainFrame extends JFrame {
 	 */
 	private void initialize() {
 		this.setSize(800, 600);
-	//	this.setJMenuBar(getFrameMenuBar());
+		this.setJMenuBar(getFrameMenuBar());
 		this.setContentPane(getFrameContentPane());
 		this.setTitle("Pineapple Management System");
 	}
@@ -218,7 +218,7 @@ public class MainFrame extends JFrame {
 			frameContentPane = new JPanel();
 			frameContentPane.setLayout(new BorderLayout());
 			frameContentPane.add(getStatePanel(), SOUTH);
-	//		frameContentPane.add(getJJToolBarBar(), NORTH);
+			frameContentPane.add(getJJToolBarBar(), NORTH);
 			frameContentPane.add(getDesktopPane(), CENTER);
 		}
 		return frameContentPane;
