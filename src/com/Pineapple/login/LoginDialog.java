@@ -118,6 +118,7 @@ public class LoginDialog extends JFrame {
 						userStr = userField.getText();
 						String passStr = new String(passwordField
 								.getPassword());
+						/*
 						//验证用户名
 						if (!userStr.equals(USERNAME)){
 							JOptionPane.showMessageDialog(LoginDialog.this,
@@ -133,7 +134,7 @@ public class LoginDialog extends JFrame {
 									JOptionPane.ERROR_MESSAGE);
 							return;
 								
-						}
+						}*/
 					
 					} catch (Exception e1) {
 						e1.printStackTrace();

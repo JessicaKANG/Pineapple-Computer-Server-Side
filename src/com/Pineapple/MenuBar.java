@@ -76,6 +76,21 @@ public class MenuBar extends JMenuBar {
 	private JMenuItem checkstockItem = null;
 //////////////////////////////////////////////////////////////////
 	/**
+	 * （配件管理）菜单
+	 */
+	private JMenu component_Menu = null;
+
+	/**
+	 * （配件资料管理）菜单项，位于（配件管理）菜单内
+	 */
+	private JMenuItem editcomponentItem = null;
+
+	/**
+	 * （查看配件）菜单项，位于（配件管理）菜单内
+	 */
+	private JMenuItem checkcomponentItem = null;
+//////////////////////////////////////////////////////////////////
+	/**
 	 * 状态栏的内部窗体提示标签
 	 */
 	private JLabel stateLabel = null;
@@ -117,8 +132,8 @@ public class MenuBar extends JMenuBar {
 		this.setSize(new Dimension(600, 24));
 		add(getorder_Menu());
 		add(getcomputer_Menu());
+		add(getcomponent_Menu());
 		add(getstock_Menu());
-		
 	}
 //////////////////////////////////////////////////////////
 	/**
@@ -181,6 +196,63 @@ public class MenuBar extends JMenuBar {
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 	/**
+	 * 初始化配件管理菜单的方法
+	 * 
+	 * @return javax.swing.JMenu
+	 */
+	public JMenu getcomponent_Menu() {
+		if (component_Menu == null) {
+			component_Menu = new JMenu();
+			component_Menu.setText("配件管理");
+			//jinhuo_Menu.setMnemonic(KeyEvent.VK_J);//快捷键
+			component_Menu.add(geteditcomponentItem());
+			component_Menu.add(getcheckcomponentItem());
+		}
+		return component_Menu;
+	}
+
+	/**
+	 * 初始化（配件资料管理）菜单项的方法 该方法定义菜单项打开配件资料管理窗口,并使窗口处于被选择状态
+	 * 
+	 * @return javax.swing.JMenuItem
+	 */
+	public JMenuItem geteditcomponentItem() {
+		if (editcomponentItem == null) {
+			editcomponentItem = new JMenuItem();
+			editcomponentItem.setText("配件资料管理");
+			//editcomponentItem.setIcon(new ImageIcon(getClass().getResource(
+			//		"/res/icon/editcomputer.png")));
+			editcomponentItem.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					createIFrame(editcomponentItem, Editcomponent.class);//鼠标监听，打开内部窗口
+				}
+			});
+		}
+		return editcomponentItem;
+	}
+
+	/**
+	 * 初始化（查看配件）菜单项的方法，该方法定义菜单项打开（查看配件）窗体，并使窗体处于已选择状态。
+	 * 
+	 * @return javax.swing.JMenuItem
+	 */
+	public JMenuItem getcheckcomponentItem() {
+		if (checkcomponentItem == null) {
+			checkcomponentItem = new JMenuItem();
+			checkcomponentItem.setText("查看配件");
+			//checkcomponentItem.setIcon(new ImageIcon(getClass().getResource(
+			//		"/res/icon/checkcomputer.png")));
+			checkcomponentItem
+					.addActionListener(new java.awt.event.ActionListener() {
+						public void actionPerformed(java.awt.event.ActionEvent e) {
+							//createIFrame(checkcomponentItem, Checkcomponent.class);
+						}
+					});
+		}
+		return checkcomponentItem;
+	}
+	//////////////////////////////////////////////////////////////////////////////////////////
+	/**
 	 * 初始化商品管理菜单的方法
 	 * 
 	 * @return javax.swing.JMenu
@@ -209,7 +281,7 @@ public class MenuBar extends JMenuBar {
 					"/res/icon/editcomputer.png")));
 			editcomputerItem.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					//createIFrame(editcomputerItem, editcomputer_IFrame.class);//鼠标监听，打开内部窗口
+					createIFrame(editcomputerItem, Editcomputer.class);//鼠标监听，打开内部窗口
 				}
 			});
 		}
@@ -230,13 +302,14 @@ public class MenuBar extends JMenuBar {
 			checkcomputerItem
 					.addActionListener(new java.awt.event.ActionListener() {
 						public void actionPerformed(java.awt.event.ActionEvent e) {
-							//createIFrame(checkcomputerItem, checkcomputer_IFrame.class);
+							createIFrame(checkcomputerItem, Checkcomputer.class);
 						}
 					});
 		}
 		return checkcomputerItem;
 	}
 	///////////////////////////////////////////////////////////////////////////////////////////////////
+	
 	/**
 	 * 初始化库存管理菜单的方法
 	 * 
@@ -266,7 +339,7 @@ public class MenuBar extends JMenuBar {
 					"/res/icon/editstock.png")));
 			editstockItem.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					//createIFrame(editstockItem, editstock_IFrame.class);//鼠标监听，打开内部窗口
+					createIFrame(editstockItem, Editstock.class);//鼠标监听，打开内部窗口
 				}
 			});
 		}
@@ -293,6 +366,7 @@ public class MenuBar extends JMenuBar {
 		}
 		return checkstockItem;
 	}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////
 	/**
 	 * 创建内部窗体的方法，该方法使用发射技术获取内部窗体的构造方法，从而创建内部窗体。

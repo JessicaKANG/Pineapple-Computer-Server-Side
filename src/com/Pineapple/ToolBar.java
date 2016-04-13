@@ -35,6 +35,8 @@ public class ToolBar extends JToolBar {
 		add(createToolButton(menuBar.getcheckorderItem()));
 		add(createToolButton(menuBar.geteditcomputerItem()));
 		add(createToolButton(menuBar.getcheckcomputerItem()));
+		add(createToolButton(menuBar.geteditcomponentItem()));
+		add(createToolButton(menuBar.getcheckcomponentItem()));
 		add(createToolButton(menuBar.geteditstockItem()));
 		add(createToolButton(menuBar.getcheckstockItem()));
 		

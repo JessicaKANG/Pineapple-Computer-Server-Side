@@ -35,9 +35,10 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `Pineapple`.`tb_computer` (
   `id_computer` VARCHAR(45) NOT NULL,
+  `name_computer` VARCHAR(45) NOT NULL,
   `type_computer` VARCHAR(45) NOT NULL,
   `price_computer` FLOAT NOT NULL,
-  `picture_computer` VARCHAR(45) NOT NULL,
+  `picture_computer` VARCHAR(45),
   PRIMARY KEY (`id_computer`))
 ENGINE = InnoDB;
 
@@ -47,6 +48,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `Pineapple`.`tb_component` (
   `id_component` VARCHAR(45) NOT NULL,
+  `name_component` VARCHAR(45) NOT NULL,
   `price_component` FLOAT NOT NULL,
   `type_component` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`id_component`))
@@ -269,3 +271,6 @@ ENGINE = InnoDB;
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+
+insert into tb_computer values("DT0001","iMAC","DESKTOP",4999,NULL);
+insert into tb_client values(1,"Jessica","123456","shuwen.kang@mail.polimi.it");
