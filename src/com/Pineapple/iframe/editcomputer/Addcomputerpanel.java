@@ -21,11 +21,6 @@ import javax.swing.JTextField;
 import com.Pineapple.Dao.DBAddcomputer;
 import com.Pineapple.Dao.model.Computer;
 
-
-
-
-
-
 public class Addcomputerpanel extends JPanel {
 	private JTextField textFieldID;
 	private JTextField textFieldName;
@@ -87,11 +82,11 @@ public class Addcomputerpanel extends JPanel {
 		comboboxType.setPreferredSize(new Dimension(120, 21));
 		//initComboBox();// 初始化下拉选择框
 		// 处理电脑分类的下拉选择框的选择事件
-				comboboxType.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						//doKeHuSelectAction();
-					}
-				});
+		//		comboboxType.addActionListener(new ActionListener() {
+		//			public void actionPerformed(ActionEvent e) {
+		//				//doKeHuSelectAction();
+		//			}
+		//		});
 		// 定位电脑分类的下拉选择框
 		setupComponent(comboboxType, 4, 2, 1, 0, true);
 		//////////////////////////////////////////////////////////

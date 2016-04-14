@@ -7,12 +7,20 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+
+import com.Pineapple.Dao.DBAddcomputer;
+import com.Pineapple.Dao.DBAddstock;
+import com.Pineapple.Dao.model.Computer;
+import com.Pineapple.Dao.model.Stock;
+import com.Pineapple.iframe.editcomputer.Addcomputerpanel;
 
 public class Addstockpanel extends JPanel{
 	private JTextField textFieldID;
@@ -21,6 +29,13 @@ public class Addstockpanel extends JPanel{
 	private JComboBox comboboxType;
 
 	private JButton resetButton;
+	
+	private Stock stock;
+	private String idtype;
+	private String type;
+	private int number;
+	
+	
 	public Addstockpanel(){
 		
 		super();//先构造一个panel
@@ -31,28 +46,30 @@ public class Addstockpanel extends JPanel{
 		setVisible(true);
 		
 		//所有的标签都设成final
-		final JLabel stockID = new JLabel();
-		stockID.setText("库存号：");
-		setupComponent(stockID, 0, 0, 1, 0, false);
-		textFieldID = new JTextField();
+		//final JLabel stockID = new JLabel();
+		//stockID.setText("型号：");
+		//setupComponent(stockID, 0, 0, 1, 0, false);
+		//textFieldID = new JTextField();
 		// 定位型号输入文本框
-		setupComponent(textFieldID, 1, 0, 5, 250, true);
+		//setupComponent(textFieldID, 1, 0, 5, 250, true);
 		////////////////////////////////////////////////////////
 		final JLabel stockAmount = new JLabel("库存量：");
-		setupComponent(stockAmount, 0, 2, 1, 0, false);
+		setupComponent(stockAmount, 0, 1, 1, 0, false);
 		textFieldAmount = new JTextField();
 		// 定位存量输入文本框
-		setupComponent(textFieldAmount, 1, 2, 5, 100, true);
+		setupComponent(textFieldAmount, 1, 1, 5, 100, true);
 		////////////////////////////////////////////////////////
 		
 		textFieldTypeID = new JTextField();
 		// 定位
-		setupComponent(textFieldTypeID, 3, 1, 3, 100, true);
+		setupComponent(textFieldTypeID, 3, 0, 3, 100, true);
 		final JLabel stockType = new JLabel();
-		stockType.setText("内容:");
-		setupComponent(stockType,0,1,1,0,false);
+		stockType.setText("型号:");
+		setupComponent(stockType,0,0,1,0,false);
 		comboboxType = new JComboBox();
 		comboboxType.setPreferredSize(new Dimension(120, 21));
+		comboboxType.setModel(new DefaultComboBoxModel(new String[]{"Component",
+				"Computer"}));
 		//initComboBox();// 初始化下拉选择框
 		// 处理库存分类的下拉选择框的选择事件
 				comboboxType.addActionListener(new ActionListener() {
@@ -61,74 +78,77 @@ public class Addstockpanel extends JPanel{
 					}
 				});
 		// 定位电脑分类的下拉选择框
-		setupComponent(comboboxType, 1, 1, 1, 0, true);
+		setupComponent(comboboxType, 1, 0, 1, 0, true);
 	/////////////////////////////////////////////////////////////////////////////
 		//添加按钮
 				final JButton addButton = new JButton();
 				//添加按钮的事件监听
-				/*addButton.addActionListener(new ActionListener() {
+				addButton.addActionListener(new ActionListener() {
 					public void actionPerformed(final ActionEvent e) {
-						if (baoZhuang.getText().equals("")
-								|| chanDi.getText().equals("")
-								|| danWei.getText().equals("")
-								|| guiGe.getText().equals("")
-								|| jianCheng.getText().equals("")
-								|| piHao.getText().equals("")
-								|| wenHao.getText().equals("")
-								|| quanCheng.getText().equals("")) {
-							JOptionPane.showMessageDialog(ShangPinTianJiaPanel.this,
-									"请完成未填写的信息。", "商品添加", JOptionPane.ERROR_MESSAGE);
+						if (textFieldAmount.getText().equals("")
+								|| textFieldTypeID.getText().equals("")) {
+							JOptionPane.showMessageDialog(Addstockpanel.this,
+									"请完成未填写的信息。", "库存添加", JOptionPane.ERROR_MESSAGE);
 							return;
 						}
-						ResultSet haveUser = Dao
-								.query("select * from tb_spinfo where spname='"
-										+ quanCheng.getText().trim() + "'");
+						Stock stock = new Stock();
 						try {
-							if (haveUser.next()) {
-								System.out.println("error");
-								JOptionPane.showMessageDialog(
-										ShangPinTianJiaPanel.this, "商品信息添加失败，存在同名商品",
-										"客户添加信息", JOptionPane.INFORMATION_MESSAGE);
+							idtype = textFieldTypeID.getText();
+							type = comboboxType.getSelectedItem().toString();
+							if(type.equals("Computer")){
+								stock.setIdcpr(textFieldTypeID.getText());
+								if (!DBAddstock.existsCMR(idtype)) {
+								JOptionPane.showMessageDialog(Addstockpanel.this,
+										"该商品不存在", "添加库存失败",
+										JOptionPane.WARNING_MESSAGE);
 								return;
+									}
+								if (DBAddstock.exists(idtype)) {
+									JOptionPane.showMessageDialog(Addstockpanel.this,
+											"该商品库存信息已存在", "添加库存失败",
+											JOptionPane.WARNING_MESSAGE);
+									return;
+									}
 							}
-						} catch (Exception er) {
-							er.printStackTrace();
-						}
-				//添加按钮的数据库操作
-						ResultSet set = Dao.query("select max(id) from tb_spinfo");
-						String id = null;
-						try {
-							if (set != null && set.next()) {
-								String sid = set.getString(1);
-								if (sid == null)
-									id = "sp1001";
-								else {
-									String str = sid.substring(2);
-									id = "sp" + (Integer.parseInt(str) + 1);
-								}
+							else{
+								stock.setIdcpt(textFieldTypeID.getText());
+								if (!DBAddstock.existsCMT(idtype)) {
+									JOptionPane.showMessageDialog(Addstockpanel.this,
+											"该配件不存在", "添加库存失败",
+											JOptionPane.WARNING_MESSAGE);
+									return;
+									}
+								if (DBAddstock.exist(idtype)) {
+									JOptionPane.showMessageDialog(Addstockpanel.this,
+											"该配件库存信息已存在", "添加库存失败",
+											JOptionPane.WARNING_MESSAGE);
+									return;
+									}
+								
 							}
-						} catch (SQLException e1) {
+								
+						} catch (Exception e1) {
 							e1.printStackTrace();
 						}
-						TbSpinfo spInfo = new TbSpinfo();
-						spInfo.setId(id);
-						spInfo.setBz(baoZhuang.getText().trim());
-						spInfo.setCd(chanDi.getText().trim());
-						spInfo.setDw(danWei.getText().trim());
-						spInfo.setGg(guiGe.getText().trim());
-						spInfo.setGysname(gysQuanCheng.getSelectedItem().toString()
-								.trim());
-						spInfo.setJc(jianCheng.getText().trim());
-						spInfo.setMemo(beiZhu.getText().trim());
-						spInfo.setPh(piHao.getText().trim());
-						spInfo.setPzwh(wenHao.getText().trim());
-						spInfo.setSpname(quanCheng.getText().trim());
-						Dao.addSp(spInfo);
-						JOptionPane.showMessageDialog(ShangPinTianJiaPanel.this,
-								"商品信息已经成功添加", "商品添加", JOptionPane.INFORMATION_MESSAGE);
-						resetButton.doClick();
+				//添加按钮的数据库操作
+						
+						
+						stock.setNumber(Integer.parseInt(textFieldAmount.getText()));
+						
+						
+						try {					
+							if (DBAddstock.save(stock)) {
+								JOptionPane.showMessageDialog(Addstockpanel.this,
+										"恭喜，库存信息已成功添加", "库存信息添加成功",
+										JOptionPane.INFORMATION_MESSAGE);
+								return;
+							}
+							
+						} catch (Exception e1) {
+							e1.printStackTrace();
+						}
 					}
-				});*/
+				});
 				addButton.setText("添加");
 				setupComponent(addButton, 1, 7, 1, 1, false);
 				
@@ -136,19 +156,13 @@ public class Addstockpanel extends JPanel{
 				resetButton.setText("重置");
 				setupComponent(resetButton, 4, 7, 1, 1, false);
 				// 重添按钮的事件监听类
-					/*	resetButton.addActionListener(new ActionListener() {
+						resetButton.addActionListener(new ActionListener() {
 							public void actionPerformed(final ActionEvent e) {
-								baoZhuang.setText("");
-								chanDi.setText("");
-								danWei.setText("");
-								guiGe.setText("");
-								jianCheng.setText("");
-								beiZhu.setText("");
-								piHao.setText("");
-								wenHao.setText("");
-								quanCheng.setText("");
+								textFieldTypeID.setText("");
+								textFieldAmount.setText("");
+								
 							}
-						});*/
+						});
 		
 		
 		

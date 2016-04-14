@@ -7,12 +7,20 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+
+import com.Pineapple.Dao.DBAddcomponent;
+import com.Pineapple.Dao.DBAddcomputer;
+import com.Pineapple.Dao.model.Component;
+import com.Pineapple.Dao.model.Computer;
+import com.Pineapple.iframe.editcomputer.Addcomputerpanel;
 
 public class Addcomponentpanel extends JPanel{
 	private JTextField textFieldID;
@@ -21,6 +29,13 @@ public class Addcomponentpanel extends JPanel{
 	private JComboBox comboboxType;
 
 	private JButton resetButton;
+	
+	
+	private Component component;
+	private String id;
+	private String name;
+	private String type;
+	private float price;
 	
 public Addcomponentpanel(){
 		
@@ -56,82 +71,58 @@ public Addcomponentpanel(){
 		setupComponent(componentType,0,2,1,0,false);
 		comboboxType = new JComboBox();
 		comboboxType.setPreferredSize(new Dimension(120, 21));
-		//initComboBox();// 初始化下拉选择框
-		// 处理配件分类的下拉选择框的选择事件
-				comboboxType.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						//doKeHuSelectAction();
-					}
-				});
-		// 定位电脑分类的下拉选择框
+		comboboxType.setModel(new DefaultComboBoxModel(new String[]{"Stock",
+				"Memory", "Graphics","Color","Screen","Processor"}));
+		// 定位配件分类的下拉选择框
 		setupComponent(comboboxType, 1, 2, 1, 0, true);
 	/////////////////////////////////////////////////////////////////////////////
 		//添加按钮
 				final JButton addButton = new JButton();
 				//添加按钮的事件监听
-				/*addButton.addActionListener(new ActionListener() {
+				addButton.addActionListener(new ActionListener() {
 					public void actionPerformed(final ActionEvent e) {
-						if (baoZhuang.getText().equals("")
-								|| chanDi.getText().equals("")
-								|| danWei.getText().equals("")
-								|| guiGe.getText().equals("")
-								|| jianCheng.getText().equals("")
-								|| piHao.getText().equals("")
-								|| wenHao.getText().equals("")
-								|| quanCheng.getText().equals("")) {
-							JOptionPane.showMessageDialog(ShangPinTianJiaPanel.this,
-									"请完成未填写的信息。", "商品添加", JOptionPane.ERROR_MESSAGE);
+						if (textFieldID.getText().equals("")
+								|| textFieldName.getText().equals("")
+								|| textFieldPrice.getText().equals("")) {
+							JOptionPane.showMessageDialog(Addcomponentpanel.this,
+									"请完成未填写的信息。", "配件添加", JOptionPane.ERROR_MESSAGE);
 							return;
 						}
-						ResultSet haveUser = Dao
-								.query("select * from tb_spinfo where spname='"
-										+ quanCheng.getText().trim() + "'");
+						
 						try {
-							if (haveUser.next()) {
-								System.out.println("error");
-								JOptionPane.showMessageDialog(
-										ShangPinTianJiaPanel.this, "商品信息添加失败，存在同名商品",
-										"客户添加信息", JOptionPane.INFORMATION_MESSAGE);
+							id = textFieldID.getText();
+							
+							if (DBAddcomputer.exists(id)) {
+								JOptionPane.showMessageDialog(Addcomponentpanel.this,
+										"该型号已存在", "添加配件失败",
+										JOptionPane.WARNING_MESSAGE);
 								return;
 							}
-						} catch (Exception er) {
-							er.printStackTrace();
-						}
-				//添加按钮的数据库操作
-						ResultSet set = Dao.query("select max(id) from tb_spinfo");
-						String id = null;
-						try {
-							if (set != null && set.next()) {
-								String sid = set.getString(1);
-								if (sid == null)
-									id = "sp1001";
-								else {
-									String str = sid.substring(2);
-									id = "sp" + (Integer.parseInt(str) + 1);
-								}
-							}
-						} catch (SQLException e1) {
+							
+							
+						} catch (Exception e1) {
 							e1.printStackTrace();
 						}
-						TbSpinfo spInfo = new TbSpinfo();
-						spInfo.setId(id);
-						spInfo.setBz(baoZhuang.getText().trim());
-						spInfo.setCd(chanDi.getText().trim());
-						spInfo.setDw(danWei.getText().trim());
-						spInfo.setGg(guiGe.getText().trim());
-						spInfo.setGysname(gysQuanCheng.getSelectedItem().toString()
-								.trim());
-						spInfo.setJc(jianCheng.getText().trim());
-						spInfo.setMemo(beiZhu.getText().trim());
-						spInfo.setPh(piHao.getText().trim());
-						spInfo.setPzwh(wenHao.getText().trim());
-						spInfo.setSpname(quanCheng.getText().trim());
-						Dao.addSp(spInfo);
-						JOptionPane.showMessageDialog(ShangPinTianJiaPanel.this,
-								"商品信息已经成功添加", "商品添加", JOptionPane.INFORMATION_MESSAGE);
-						resetButton.doClick();
+				//添加按钮的数据库操作
+						Component component = new Component();
+						component.setId(textFieldID.getText());
+						component.setName(textFieldName.getText());
+						component.setType(comboboxType.getSelectedItem().toString());
+						component.setPrice(Float.parseFloat(textFieldPrice.getText()));
+						
+						try {					
+							if (DBAddcomponent.save(component)) {
+								JOptionPane.showMessageDialog(Addcomponentpanel.this,
+										"恭喜，配件已成功添加入库", "配件添加成功",
+										JOptionPane.INFORMATION_MESSAGE);
+								return;
+							}
+							
+						} catch (Exception e1) {
+							e1.printStackTrace();
+						}
 					}
-				});*/
+				});
 				addButton.setText("添加");
 				setupComponent(addButton, 1, 7, 1, 1, false);
 				
@@ -139,19 +130,15 @@ public Addcomponentpanel(){
 				resetButton.setText("重置");
 				setupComponent(resetButton, 4, 7, 1, 1, false);
 				// 重添按钮的事件监听类
-					/*	resetButton.addActionListener(new ActionListener() {
-							public void actionPerformed(final ActionEvent e) {
-								baoZhuang.setText("");
-								chanDi.setText("");
-								danWei.setText("");
-								guiGe.setText("");
-								jianCheng.setText("");
-								beiZhu.setText("");
-								piHao.setText("");
-								wenHao.setText("");
-								quanCheng.setText("");
-							}
-						});*/
+				resetButton.addActionListener(new ActionListener() {
+					public void actionPerformed(final ActionEvent e) {
+						textFieldID.setText("");
+						textFieldName.setText("");
+						textFieldPrice.setText("");
+						
+						
+					}
+				});
 		
 		
 		
