@@ -18,6 +18,7 @@ public class Fixcomputerpanel extends JPanel{
 	private JTextField textFieldID;
 	private JTextField textFieldName;
 	private JTextField textFieldPrice;
+	private JTextField textFieldPicture;
 	private JComboBox comboboxType;
 	private JComboBox comboboxColor;
 	private JComboBox comboboxSize;
@@ -170,9 +171,17 @@ public class Fixcomputerpanel extends JPanel{
 		// 定位
 		setupComponent(comboboxProcessor, 4, 6, 1, 0, true);
 		///////////////////////////////////////////////////////////////
+		final JLabel computerPicture = new JLabel();
+		computerPicture.setText("图片：");
+		setupComponent(computerPicture, 0, 7, 1, 0, false);
+		textFieldPicture = new JTextField();
+		// 定位图片地址输入文本框
+		setupComponent(textFieldPicture, 1, 7, 5, 100, true);
+		///////////////////////////////////////////////////////////////
+		
 		final JLabel configSelect = new JLabel();
 		configSelect.setText("选择商品:");
-		setupComponent(configSelect,0,7,1,0,false);
+		setupComponent(configSelect,0,8,1,0,false);
 		comboboxSelect = new JComboBox();
 		comboboxSelect.setPreferredSize(new Dimension(120, 21));
 		//initComboBox();// 初始化下拉选择框
@@ -183,11 +192,11 @@ public class Fixcomputerpanel extends JPanel{
 					}
 				});
 		// 定位
-		setupComponent(comboboxSelect, 1, 7, 5, 0, true);
+		setupComponent(comboboxSelect, 1, 8, 5, 0, true);
 		
 		modifyButton = new JButton();
 		modifyButton.setText("修改");
-		setupComponent(modifyButton, 1, 8, 1, 1, false);
+		setupComponent(modifyButton, 1, 9, 1, 1, false);
 		// 修改按钮的事件监听类
 			/*	resetButton.addActionListener(new ActionListener() {
 					public void actionPerformed(final ActionEvent e) {
@@ -204,7 +213,7 @@ public class Fixcomputerpanel extends JPanel{
 				});*/
 		deleteButton = new JButton();
 		deleteButton.setText("删除");
-		setupComponent(deleteButton, 4, 8, 1, 1, false);
+		setupComponent(deleteButton, 4, 9, 1, 1, false);
 		// 删除按钮的事件监听类
 			/*	resetButton.addActionListener(new ActionListener() {
 					public void actionPerformed(final ActionEvent e) {

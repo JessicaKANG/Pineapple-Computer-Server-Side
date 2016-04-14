@@ -1,6 +1,7 @@
 package com.Pineapple.iframe.editcomputer;
 
 import java.awt.Dimension;
+
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -9,6 +10,7 @@ import java.awt.event.ActionListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
@@ -16,6 +18,9 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import com.Pineapple.Dao.DBAddcomputer;
+import com.Pineapple.Dao.model.Computer;
+
 
 
 
@@ -25,6 +30,7 @@ public class Addcomputerpanel extends JPanel {
 	private JTextField textFieldID;
 	private JTextField textFieldName;
 	private JTextField textFieldPrice;
+	private JTextField textFieldPicture;
 	private JComboBox comboboxType;
 	private JComboBox comboboxColor;
 	private JComboBox comboboxSize;
@@ -33,6 +39,14 @@ public class Addcomputerpanel extends JPanel {
 	private JComboBox comboboxGraphics;
 	private JComboBox comboboxProcessor;
 	private JButton resetButton;
+	
+	private Computer computer;
+	private String id;
+	private String name;
+	private String type;
+	private float price;
+	private String picture;
+	
 	
 	public Addcomputerpanel(){
 		
@@ -68,6 +82,8 @@ public class Addcomputerpanel extends JPanel {
 		computerType.setText("分类:");
 		setupComponent(computerType,3,2,1,0,false);
 		comboboxType = new JComboBox();
+		comboboxType.setModel(new DefaultComboBoxModel(new String[]{"DESKTOP",
+				"LAPTOP", "SERVER"}));
 		comboboxType.setPreferredSize(new Dimension(120, 21));
 		//initComboBox();// 初始化下拉选择框
 		// 处理电脑分类的下拉选择框的选择事件
@@ -173,93 +189,83 @@ public class Addcomputerpanel extends JPanel {
 				});
 		// 定位
 		setupComponent(comboboxProcessor, 4, 6, 1, 0, true);
+		///////////////////////////////////////////////////////////////////
+		final JLabel computerPicture = new JLabel();
+		computerPicture.setText("图片：");
+		setupComponent(computerPicture, 0, 7, 1, 0, false);
+		textFieldPicture = new JTextField();
+		// 定位图片地址输入文本框
+		setupComponent(textFieldPicture, 1, 7, 5, 100, true);
+		
 /////////////////////////////////////////////////////////////////////////////////////////////
 		//添加按钮
 		final JButton addButton = new JButton();
 		//添加按钮的事件监听
-		/*addButton.addActionListener(new ActionListener() {
+		addButton.addActionListener(new ActionListener() {
+			//先判断信息是否齐全，再执行数据库操作
 			public void actionPerformed(final ActionEvent e) {
-				if (baoZhuang.getText().equals("")
-						|| chanDi.getText().equals("")
-						|| danWei.getText().equals("")
-						|| guiGe.getText().equals("")
-						|| jianCheng.getText().equals("")
-						|| piHao.getText().equals("")
-						|| wenHao.getText().equals("")
-						|| quanCheng.getText().equals("")) {
-					JOptionPane.showMessageDialog(ShangPinTianJiaPanel.this,
+				if (textFieldID.getText().equals("")
+						|| textFieldName.getText().equals("")
+						|| textFieldPrice.getText().equals("")) {
+					JOptionPane.showMessageDialog(Addcomputerpanel.this,
 							"请完成未填写的信息。", "商品添加", JOptionPane.ERROR_MESSAGE);
 					return;
 				}
-				ResultSet haveUser = Dao
-						.query("select * from tb_spinfo where spname='"
-								+ quanCheng.getText().trim() + "'");
+				
 				try {
-					if (haveUser.next()) {
-						System.out.println("error");
-						JOptionPane.showMessageDialog(
-								ShangPinTianJiaPanel.this, "商品信息添加失败，存在同名商品",
-								"客户添加信息", JOptionPane.INFORMATION_MESSAGE);
+					id = textFieldID.getText();
+					
+					if (DBAddcomputer.exists(id)) {
+						JOptionPane.showMessageDialog(Addcomputerpanel.this,
+								"该型号已存在", "添加商品失败",
+								JOptionPane.WARNING_MESSAGE);
 						return;
 					}
-				} catch (Exception er) {
-					er.printStackTrace();
-				}
-		//添加按钮的数据库操作
-				ResultSet set = Dao.query("select max(id) from tb_spinfo");
-				String id = null;
-				try {
-					if (set != null && set.next()) {
-						String sid = set.getString(1);
-						if (sid == null)
-							id = "sp1001";
-						else {
-							String str = sid.substring(2);
-							id = "sp" + (Integer.parseInt(str) + 1);
-						}
-					}
-				} catch (SQLException e1) {
+					
+					
+				} catch (Exception e1) {
 					e1.printStackTrace();
 				}
-				TbSpinfo spInfo = new TbSpinfo();
-				spInfo.setId(id);
-				spInfo.setBz(baoZhuang.getText().trim());
-				spInfo.setCd(chanDi.getText().trim());
-				spInfo.setDw(danWei.getText().trim());
-				spInfo.setGg(guiGe.getText().trim());
-				spInfo.setGysname(gysQuanCheng.getSelectedItem().toString()
-						.trim());
-				spInfo.setJc(jianCheng.getText().trim());
-				spInfo.setMemo(beiZhu.getText().trim());
-				spInfo.setPh(piHao.getText().trim());
-				spInfo.setPzwh(wenHao.getText().trim());
-				spInfo.setSpname(quanCheng.getText().trim());
-				Dao.addSp(spInfo);
-				JOptionPane.showMessageDialog(ShangPinTianJiaPanel.this,
-						"商品信息已经成功添加", "商品添加", JOptionPane.INFORMATION_MESSAGE);
-				resetButton.doClick();
+				
+				Computer computer = new Computer();
+				computer.setId(textFieldID.getText());
+				computer.setName(textFieldName.getText());
+				computer.setType(comboboxType.getSelectedItem().toString());
+				computer.setPrice(Float.parseFloat(textFieldPrice.getText()));
+				computer.setPicture(textFieldPicture.getText());
+				
+				try {					
+					if (DBAddcomputer.save(computer)) {
+						JOptionPane.showMessageDialog(Addcomputerpanel.this,
+								"恭喜，商品已成功添加入库", "商品添加成功",
+								JOptionPane.INFORMATION_MESSAGE);
+						return;
+					}
+					
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
+			
+		
+	
 			}
-		});*/
+		});
 		addButton.setText("添加");
-		setupComponent(addButton, 1, 7, 1, 1, false);
+		setupComponent(addButton, 1, 8, 1, 1, false);
 		
 		resetButton = new JButton();
 		resetButton.setText("重置");
-		setupComponent(resetButton, 4, 7, 1, 1, false);
+		setupComponent(resetButton, 4, 8, 1, 1, false);
 		// 重添按钮的事件监听类
-			/*	resetButton.addActionListener(new ActionListener() {
+				resetButton.addActionListener(new ActionListener() {
 					public void actionPerformed(final ActionEvent e) {
-						baoZhuang.setText("");
-						chanDi.setText("");
-						danWei.setText("");
-						guiGe.setText("");
-						jianCheng.setText("");
-						beiZhu.setText("");
-						piHao.setText("");
-						wenHao.setText("");
-						quanCheng.setText("");
+						textFieldID.setText("");
+						textFieldName.setText("");
+						textFieldPrice.setText("");
+						textFieldPicture.setText("");
+						
 					}
-				});*/
+				});
 				
 		
 		
