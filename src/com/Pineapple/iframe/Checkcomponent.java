@@ -1,7 +1,6 @@
 package com.Pineapple.iframe;
 
 import java.awt.GridBagConstraints;
-
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
@@ -17,30 +16,25 @@ import javax.swing.JComponent;
 import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
-import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import javax.swing.table.DefaultTableModel;
 
+import com.Pineapple.Dao.DBCheckcomponent;
 import com.Pineapple.Dao.DBCheckcomputer;
+import com.Pineapple.Dao.model.Component;
 import com.Pineapple.Dao.model.Computer;
 
-
-
-
-
-public class Checkcomputer extends JInternalFrame{
+public class Checkcomponent extends JInternalFrame{
 	private JTable table;
 	private JTextField conditionContent;
 	//private JComboBox conditionOperation;
 	private JComboBox conditionName;
-	public Checkcomputer() {
+	public Checkcomponent() {
 		super();//先构造一个内部窗口
 		setIconifiable(true);//开启内部窗口最小化功能
 		setClosable(true);//开启内部窗口关闭功能
-		setTitle("商品信息查询");//设置窗口标题
+		setTitle("配件信息查询");//设置窗口标题
 		getContentPane().setLayout(new GridBagLayout());//窗口内部布局设置
 		setBounds(100, 100, 600, 375);//窗口大小设置
 
@@ -48,7 +42,7 @@ public class Checkcomputer extends JInternalFrame{
 		table.setEnabled(false);//设置表格使能关闭，即不与用户交互
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);//表格自动调整尺寸方式
 		final DefaultTableModel dftm = (DefaultTableModel) table.getModel();//表格模型强制转换为向量模型
-		String[] tableHeads = new String[]{"型号", "名称", "类型", "价格", "图片",};//添加表头
+		String[] tableHeads = new String[]{"型号", "名称", "类型", "价格"};//添加表头
 		dftm.setColumnIdentifiers(tableHeads);//把表头设置为每栏的标示
 		
 		//把表格放置到有滚动条的面板上,控制表格位置
@@ -85,12 +79,12 @@ public class Checkcomputer extends JInternalFrame{
 		final JButton showAllButton = new JButton();
 		showAllButton.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
-				List<Computer> list = DBCheckcomputer.select();
+				List<Component> list = DBCheckcomponent.select();
 				updateTable(list, dftm);
 			}
 		});
 		setupComponet(showAllButton, 5, 0, 1, 1, false);
-		showAllButton.setText("显示全部商品");
+		showAllButton.setText("显示全部配件");
 	}
 	
 	/**
@@ -122,19 +116,18 @@ public class Checkcomputer extends JInternalFrame{
 	 * @param list
 	 * @param dftm
 	 */
-	private void updateTable(List<Computer> list, final DefaultTableModel dftm) {
+	private void updateTable(List<Component> list, final DefaultTableModel dftm) {
 		int num = dftm.getRowCount();//判断表有多少行
 		for (int i = 0; i < num; i++)
 			dftm.removeRow(0);//把表中第i行现有内容去掉
 		Iterator iterator = list.iterator();//创建一个迭代器，用于遍历链表
 		while (iterator.hasNext()) {
-			Computer computer = (Computer) iterator.next();//获取链表中的元素
+			Component component = (Component) iterator.next();//获取链表中的元素
 			Vector rowData = new Vector();
-			rowData.add(computer.getId());
-			rowData.add(computer.getName());
-			rowData.add(computer.getType());
-			rowData.add(computer.getPrice());
-			rowData.add(computer.getPicture());
+			rowData.add(component.getId());
+			rowData.add(component.getName());
+			rowData.add(component.getType());
+			rowData.add(component.getPrice());
 			dftm.addRow(rowData);
 		}
 	}

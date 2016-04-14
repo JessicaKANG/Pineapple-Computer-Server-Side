@@ -245,7 +245,7 @@ public class MenuBar extends JMenuBar {
 			checkcomponentItem
 					.addActionListener(new java.awt.event.ActionListener() {
 						public void actionPerformed(java.awt.event.ActionEvent e) {
-							//createIFrame(checkcomponentItem, Checkcomponent.class);
+							createIFrame(checkcomponentItem, Checkcomponent.class);
 						}
 					});
 		}
@@ -360,7 +360,7 @@ public class MenuBar extends JMenuBar {
 			checkstockItem
 					.addActionListener(new java.awt.event.ActionListener() {
 						public void actionPerformed(java.awt.event.ActionEvent e) {
-							//createIFrame(checkstockItem, checkstock_IFrame.class);
+							createIFrame(checkstockItem, Checkstock.class);
 						}
 					});
 		}
