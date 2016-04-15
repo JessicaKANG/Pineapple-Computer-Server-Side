@@ -2,6 +2,10 @@ package com.Pineapple.login;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.net.Socket;
+
 import javax.swing.*;
 import com.Pineapple.*;
 
@@ -21,10 +25,12 @@ public class LoginDialog extends JFrame {
 	private JButton exitButton = null;
 	private static String userStr;
 	private MainFrame mainFrame;//主框架类
+	
 
 	
 	//构造方法
 	public LoginDialog() {
+		
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());//设置界面效果
 			mainFrame = new MainFrame();//构造主框架
@@ -118,6 +124,7 @@ public class LoginDialog extends JFrame {
 						userStr = userField.getText();
 						String passStr = new String(passwordField
 								.getPassword());
+						 
 						/*
 						//验证用户名
 						if (!userStr.equals(USERNAME)){

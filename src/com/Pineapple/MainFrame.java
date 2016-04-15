@@ -1,11 +1,14 @@
 package com.Pineapple;
 
 import static java.awt.BorderLayout.*;
+
 import static javax.swing.border.BevelBorder.*;
 import java.awt.*;
 import java.util.Date;
 import javax.swing.*;
 
+
+import com.Pineapple.SocketSever.ServerMainThread;
 import com.Pineapple.login.LoginDialog;//不在一个包里所以要引用
 
 public class MainFrame extends JFrame {
@@ -22,12 +25,18 @@ public class MainFrame extends JFrame {
 	private static JLabel czyStateLabel = null;
 	private JSeparator jSeparator2 = null;
 	
+	
+	
+	
 	/**
 	 * 程序主方法，运行程序的入口
 	 * 
 	 * @param args
 	 */
 	public static void main(String[] args) {
+		
+		new Thread(new ServerMainThread()).start();
+		
 		SplashScreen splashScreen = SplashScreen.getSplashScreen();//？？获取闪屏对象
 		JFrame login = new LoginDialog();
 		//如果不闪屏的话执行以下操作
