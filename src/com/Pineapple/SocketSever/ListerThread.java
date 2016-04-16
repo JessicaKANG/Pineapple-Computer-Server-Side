@@ -16,8 +16,8 @@ class ListenThread implements Runnable
             if(socketServer.mysocket.get(i).isClosed())  
             {   
                         socketServer.mysocket.remove(socketServer.mysocket.get(i));  
-                        int j=1+i;
-                        System.out.println("第"+j+"个客户端已经断开");  
+                        
+                        System.out.println("1个客户端已经断开");  
                     }  
             }  
           
