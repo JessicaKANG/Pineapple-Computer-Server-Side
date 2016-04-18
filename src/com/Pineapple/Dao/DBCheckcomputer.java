@@ -14,9 +14,12 @@ import org.apache.commons.dbutils.DbUtils;
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.ResultSetHandler;
 import org.apache.commons.dbutils.RowProcessor;
+import org.apache.commons.dbutils.handlers.BeanHandler;
 import org.apache.commons.dbutils.handlers.BeanListHandler;
+import org.apache.commons.dbutils.handlers.ColumnListHandler;
+import org.apache.commons.dbutils.handlers.ScalarHandler;
 
-
+import com.Pineapple.Dao.model.Component;
 import com.Pineapple.Dao.model.Computer;
 import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
 
@@ -60,6 +63,16 @@ public class DBCheckcomputer implements DBConfig{
     	 BeanProcessor bean = new BeanProcessor(map);
     	 RowProcessor processor = new BasicRowProcessor(bean);
     	 //Users rs = runner.query(sql, new BeanHandler<Users>(Users.class, processor));
+    	 
+    	 Map<String, String> map2 = new HashMap<String, String>();
+    	 map2.put("id_component", "id");
+    	 map2.put("name_component", "name");
+    	 map2.put("type_component", "type");
+    	 map2.put("price_component", "price");
+    	 // 用构建好的HashMap建立一个BeanProcessor对象
+    	 BeanProcessor bean2 = new BeanProcessor(map2);
+    	 RowProcessor processor2 = new BasicRowProcessor(bean2);
+    	 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////	
     	
     	
@@ -69,6 +82,42 @@ public class DBCheckcomputer implements DBConfig{
         ResultSetHandler<List<Computer>> rsh = new BeanListHandler<Computer>(Computer.class,processor);// 创建结果集处理类
         try {
             List<Computer> result = (List<Computer>)runner.query(conn, sql, rsh);// 获得查询结果
+            Iterator iterator = result.iterator();
+            while (iterator.hasNext()) {
+    			Computer computer = (Computer) iterator.next();
+    			String sql2 = "select id_component from tb_computer_has_component "
+    					+ "where id_computer = '"+computer.getId()+"';";
+    			ResultSetHandler<List<String>> rsh2 = new ColumnListHandler();;
+    			List<String>result2 = (List<String>)runner.query(conn,sql2,rsh2);
+    			Iterator iterator2 = result2.iterator();
+    			while (iterator2.hasNext()){
+    				String idcomponent = (String) iterator2.next();
+    				String sql3 ="select * from tb_component"
+    					+ " where id_component ='"+idcomponent+"';";
+    				ResultSetHandler<Component> rsh3 = new BeanHandler<Component>(Component.class,processor2);   				
+    				Component result3 = (Component) runner.query(conn, sql3, rsh3);
+    				if(result3.getType().equals("Stock")){
+    					computer.setStock(result3.getName());
+    				}
+    				if(result3.getType().equals("Memory")){
+    					computer.setMemory(result3.getName());
+    				}
+    				if(result3.getType().equals("Color")){
+    					computer.setColor(result3.getName());
+    				}
+    				if(result3.getType().equals("Screen")){
+    					computer.setSize(result3.getName());
+    				}
+    				if(result3.getType().equals("Graphics")){
+    					computer.setGraphic(result3.getName());
+    				}
+    				if(result3.getType().equals("Processor")){
+    					computer.setProcessor(result3.getName());
+    				}
+    				
+    			}
+    			
+            }
           
             return result;
         } catch (SQLException e) {

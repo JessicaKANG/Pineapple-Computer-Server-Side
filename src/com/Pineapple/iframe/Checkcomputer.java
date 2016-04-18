@@ -48,7 +48,7 @@ public class Checkcomputer extends JInternalFrame{
 		table.setEnabled(false);//设置表格使能关闭，即不与用户交互
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);//表格自动调整尺寸方式
 		final DefaultTableModel dftm = (DefaultTableModel) table.getModel();//表格模型强制转换为向量模型
-		String[] tableHeads = new String[]{"型号", "名称", "类型", "价格", "图片",};//添加表头
+		String[] tableHeads = new String[]{"图片","型号", "名称", "类型", "价格","颜色","屏幕尺寸","硬盘","内存","显卡","处理器"};//添加表头
 		dftm.setColumnIdentifiers(tableHeads);//把表头设置为每栏的标示
 		
 		//把表格放置到有滚动条的面板上,控制表格位置
@@ -130,11 +130,17 @@ public class Checkcomputer extends JInternalFrame{
 		while (iterator.hasNext()) {
 			Computer computer = (Computer) iterator.next();//获取链表中的元素
 			Vector rowData = new Vector();
+			rowData.add(computer.getPicture());
 			rowData.add(computer.getId());
 			rowData.add(computer.getName());
 			rowData.add(computer.getType());
 			rowData.add(computer.getPrice());
-			rowData.add(computer.getPicture());
+			rowData.add(computer.getColor());
+			rowData.add(computer.getSize());
+			rowData.add(computer.getStock());
+			rowData.add(computer.getMemory());
+			rowData.add(computer.getGraphic());
+			rowData.add(computer.getProcessor());
 			dftm.addRow(rowData);
 		}
 	}

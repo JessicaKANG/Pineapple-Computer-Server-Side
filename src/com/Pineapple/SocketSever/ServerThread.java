@@ -7,11 +7,14 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.List;
 
 import javax.swing.JOptionPane;
 
+import com.Pineapple.Dao.DBCheckcomputer;
 import com.Pineapple.Dao.DBClientLogin;
 import com.Pineapple.Dao.model.Client;
+import com.Pineapple.Dao.model.Computer;
 
 public class ServerThread implements Runnable {    
     
@@ -57,7 +60,8 @@ public class ServerThread implements Runnable {
            } 
     	   ///////////////////////////////登陆部分逻辑检测////////////////////////
            if(accept.equals("LOGIN"))  
-           {  
+           { 
+        	   System.out.println("接收到LOGIN");
                try  
                {  
             	// 向客户端发送信息的DataOutputStream    
@@ -86,7 +90,8 @@ public class ServerThread implements Runnable {
            } 
            //////////////////////////////////////注册逻辑检测/////////////////////////////
            else if(accept.equals("SIGNUP"))  
-           {  
+           {
+        	   System.out.println("接收到SIGNUP");
                  try {
                 	out = new DataOutputStream(socket.getOutputStream());
                 	username = in.readUTF();					
@@ -112,6 +117,20 @@ public class ServerThread implements Runnable {
 					e.printStackTrace();
 				}
            } 
+           /////////////////////////////////////////////////////////////////////////////
+           else if(accept.equals("SHOWALL")){
+        	   System.out.println("接收到SHOWALL");
+        	   List<Computer> list = DBCheckcomputer.select();
+	        	   try {
+					outBean = new ObjectOutputStream(socket.getOutputStream());
+					outBean.writeObject(list);
+					outBean.flush();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+        	   
+           }
            /////////////////////////////////////////////////////////////////////////////
            try  
            {  
