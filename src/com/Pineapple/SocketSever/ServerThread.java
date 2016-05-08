@@ -7,11 +7,13 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.JOptionPane;
 
 import com.Pineapple.Dao.DBCheckcomputer;
+import com.Pineapple.Dao.DBCheckstock;
 import com.Pineapple.Dao.DBClientLogin;
 import com.Pineapple.Dao.model.Client;
 import com.Pineapple.Dao.model.Computer;
@@ -26,7 +28,7 @@ public class ServerThread implements Runnable {
     private ObjectInputStream inBean = null;
     private ObjectOutputStream outBean = null;
     private Client client;
-    
+    private Boolean check = false;
     
     public ServerThread(Socket socket)  
     {            
@@ -126,6 +128,55 @@ public class ServerThread implements Runnable {
 					outBean.writeObject(list);
 					outBean.flush();
 				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+        	   
+           }
+           /////////////////////////////////////////////////////////////////////////////
+           else if(accept.equals("ORDER")){
+        	   System.out.println("接收到ORDER");
+        	   
+	        	   try {
+	        		   inBean = new ObjectInputStream(socket.getInputStream());
+	        		   List<String> computerlist = (List<String>) inBean.readObject();
+	        		   List<String> componentlist = (List<String>) inBean.readObject();
+	        		   Iterator iterator = computerlist.iterator();
+	        		   while (iterator.hasNext()){
+	        			   String computerID = null;
+	        			   computerID = (String)iterator.next();	        			   
+	        			   check = DBCheckstock.check(computerID);
+	        			   if(!check){
+	        				   return;
+	        			   }
+	        		   }
+	        		   Iterator iterator1 = componentlist.iterator();
+	        		   while (iterator1.hasNext()){
+	        			   
+	        		   }
+	        		   if (check){
+	        			   out = new DataOutputStream(socket.getOutputStream());
+	        			   out.writeUTF("True");
+	        			   out.flush();
+	        			   Iterator iterator2 = computerlist.iterator();
+	        			   while(iterator2.hasNext()){
+	        				   String computerID = null;
+		        			   computerID = (String)iterator.next();
+	        				   DBCheckstock.modify(computerID);
+	        			   }
+	        			   
+	        		   }
+	        		   else {
+	        			   out = new DataOutputStream(socket.getOutputStream());
+	        			   out.writeUTF("False");
+	        			   out.flush();	        			   
+	        		   }
+	        		   
+	        		   
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (ClassNotFoundException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}

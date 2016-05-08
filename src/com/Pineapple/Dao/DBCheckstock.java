@@ -13,6 +13,7 @@ import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.ResultSetHandler;
 import org.apache.commons.dbutils.RowProcessor;
 import org.apache.commons.dbutils.handlers.BeanListHandler;
+import org.apache.commons.dbutils.handlers.ColumnListHandler;
 
 import com.Pineapple.Dao.model.Component;
 import com.Pineapple.Dao.model.Stock;
@@ -76,5 +77,60 @@ public class DBCheckstock implements DBConfig{
         }
         return null;// 如果发生异常返回null
     }
-
+    public static Boolean check(String computerID){
+    	Map<String, String> map = new HashMap<String, String>();
+   	 	map.put("id_stock", "id");
+   	 	map.put("id_computer", "idcpr");
+   	 	map.put("id_component", "idcpt");
+   	 	map.put("number_stock", "number");
+   	 	// 用构建好的HashMap建立一个BeanProcessor对象
+   	 	BeanProcessor bean = new BeanProcessor(map);
+   	 	RowProcessor processor = new BasicRowProcessor(bean);
+    	///////////////////////////////////////////////////////////////////////////
+	   	 QueryRunner runner = new QueryRunner();// 创建QueryRunner对象
+	     String sql = "select number_stock from tb_stock where id_computer = '"+ computerID+"';";// 定义查询语句
+	     Connection conn = getConnection();// 获得连接
+	     ResultSetHandler<Integer> rsh = new ColumnListHandler();// 创建结果集处理类
+	     try {	    	 	
+	    	 	int result = runner.query(conn, sql, rsh);// 获得查询结果
+	            if (result > 0) {// 如果列表中存在数据
+	                return true;// 返回true
+	            } else {// 如果列表中没有数据
+	                return false;// 返回false
+	            }
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        } finally {
+	            DbUtils.closeQuietly(conn);// 关闭连接
+	        }
+	        return false;// 如果发生异常返回false
+    }
+    public static void modify(String computerID){
+    	Map<String, String> map = new HashMap<String, String>();
+   	 	map.put("id_stock", "id");
+   	 	map.put("id_computer", "idcpr");
+   	 	map.put("id_component", "idcpt");
+   	 	map.put("number_stock", "number");
+   	 	// 用构建好的HashMap建立一个BeanProcessor对象
+   	 	BeanProcessor bean = new BeanProcessor(map);
+   	 	RowProcessor processor = new BasicRowProcessor(bean);
+   	 	////////////////////////////////////////////////////////////////////////
+	   	 QueryRunner runner = new QueryRunner();// 创建QueryRunner对象
+	     String sql = "select number_stock from tb_stock where id_computer = '"+ computerID+"';";// 定义查询语句
+	     Connection conn = getConnection();// 获得连接
+	     ResultSetHandler<Integer> rsh = new ColumnListHandler();// 创建结果集处理类
+	     try {	    	 	
+	    	 	int result = runner.query(conn, sql, rsh);// 获得查询结果
+	            result = result - 1;
+	            QueryRunner runner2 = new QueryRunner();// 创建QueryRunner对象
+	   	     	String sql2 = "update tb_stock set number_stock = '"+result+"'where id_computer = '"+ computerID+"';";// 定义查询语句
+	   	     	Connection conn2 = getConnection();// 获得连接
+	   	     	runner2.query(conn2, sql2, null);
+	            
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        } finally {
+	            DbUtils.closeQuietly(conn);// 关闭连接
+	        }
+    }
 }

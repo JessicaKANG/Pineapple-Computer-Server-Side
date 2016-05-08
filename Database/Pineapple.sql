@@ -85,7 +85,7 @@ ENGINE = InnoDB;
 -- Table `Pineapple`.`tb_order`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `Pineapple`.`tb_order` (
-  `id_order` INT NOT NULL,
+  `id_order` INT(45) NOT NULL,
   `price_order` FLOAT NOT NULL,
   `date_order` DATETIME NOT NULL,
   `state_order` VARCHAR(45) NOT NULL,
