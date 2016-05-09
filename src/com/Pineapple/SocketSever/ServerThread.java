@@ -7,16 +7,21 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.swing.JOptionPane;
 
+import com.Pineapple.Dao.DBAddorder;
 import com.Pineapple.Dao.DBCheckcomputer;
 import com.Pineapple.Dao.DBCheckstock;
 import com.Pineapple.Dao.DBClientLogin;
 import com.Pineapple.Dao.model.Client;
 import com.Pineapple.Dao.model.Computer;
+import com.Pineapple.Dao.model.Order;
 
 public class ServerThread implements Runnable {    
     
@@ -140,31 +145,71 @@ public class ServerThread implements Runnable {
 	        	   try {
 	        		   inBean = new ObjectInputStream(socket.getInputStream());
 	        		   List<String> computerlist = (List<String>) inBean.readObject();
-	        		   List<String> componentlist = (List<String>) inBean.readObject();
+	        		   List<String> componentlist = (List<String>) inBean.readObject();	        		  
 	        		   Iterator iterator = computerlist.iterator();
 	        		   while (iterator.hasNext()){
 	        			   String computerID = null;
 	        			   computerID = (String)iterator.next();	        			   
-	        			   check = DBCheckstock.check(computerID);
+	        			   check = DBCheckstock.checkcpr(computerID);
 	        			   if(!check){
 	        				   return;
 	        			   }
-	        		   }
-	        		   Iterator iterator1 = componentlist.iterator();
-	        		   while (iterator1.hasNext()){
-	        			   
-	        		   }
-	        		   if (check){
-	        			   out = new DataOutputStream(socket.getOutputStream());
-	        			   out.writeUTF("True");
-	        			   out.flush();
-	        			   Iterator iterator2 = computerlist.iterator();
-	        			   while(iterator2.hasNext()){
-	        				   String computerID = null;
-		        			   computerID = (String)iterator.next();
-	        				   DBCheckstock.modify(computerID);
+	        		   }	        		   
+	        		   if (check){	
+	        			   Map<String,Integer> map = new HashMap<String,Integer>();        			   
+	        			   for (int m=0;m<componentlist.size();m++){
+	        				   int p = map.getOrDefault(componentlist.get(m), 0);
+	        				   if(p==0){
+	        					   map.put(componentlist.get(m), 1);
+	        					   for(int n=m+1;n<componentlist.size();n++){
+	        						   if(componentlist.get(n).equals(componentlist.get(m))){	        							
+	        							   int k = map.get(componentlist.get(m))+1;
+	        							   map.put(componentlist.get(m), k);
+	        						   }
+	        					   }
+	        					   
+	        				   }	        				  	        					   	        				           				   
 	        			   }
-	        			   
+	        			   Iterator<Map.Entry<String, Integer>> entries = map.entrySet().iterator();
+	        			   while (entries.hasNext()){
+	        				   check = false;
+	        				   Entry<String, Integer> entry = entries.next();
+	        				   check = DBCheckstock.checkcpt(entry.getKey(), entry.getValue());
+	        				   if(!check){
+	        					   return;
+	        				   }
+	        			   }
+	        			   if(check){
+	        				   out = new DataOutputStream(socket.getOutputStream());
+	        				   out.writeUTF("True");
+	        				   out.flush();	
+		        			   Iterator iterator2 = computerlist.iterator();
+		        			   while(iterator2.hasNext()){
+		        				   String computerID = null;
+			        			   computerID = (String)iterator2.next();
+		        				   DBCheckstock.modifycpr(computerID);
+		        			   	}//电脑库存修改
+		        			   Iterator<Map.Entry<String, Integer>> entries2 = map.entrySet().iterator();
+		        			   while (entries2.hasNext()){
+		        				   Entry<String, Integer> entry2 = entries2.next();
+		        				   DBCheckstock.modifycpt(entry2.getKey(),entry2.getValue());
+		        			   }//配件库存修改
+		        			   inBean = new ObjectInputStream(socket.getInputStream());
+		        			   Order order = (Order)inBean.readObject();
+		        			   if(DBAddorder.save(order)){
+		        				   out.writeUTF("True");
+		        				   out.flush();	
+		        				   JOptionPane.showMessageDialog(null,
+		   								"您有一条新订单待处理.", "订单提醒",
+		   								JOptionPane.INFORMATION_MESSAGE);
+		        			   }
+		        			   
+	        			   }
+	        			   else {
+		        			   out = new DataOutputStream(socket.getOutputStream());
+		        			   out.writeUTF("False");
+		        			   out.flush();	        			   
+		        		   }
 	        		   }
 	        		   else {
 	        			   out = new DataOutputStream(socket.getOutputStream());

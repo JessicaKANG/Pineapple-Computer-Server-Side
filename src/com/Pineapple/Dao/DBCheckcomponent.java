@@ -13,6 +13,8 @@ import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.ResultSetHandler;
 import org.apache.commons.dbutils.RowProcessor;
 import org.apache.commons.dbutils.handlers.BeanListHandler;
+import org.apache.commons.dbutils.handlers.ColumnListHandler;
+import org.apache.commons.dbutils.handlers.ScalarHandler;
 
 import com.Pineapple.Dao.model.Component;
 import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
@@ -75,5 +77,21 @@ public class DBCheckcomponent implements DBConfig{
         }
         return null;// 如果发生异常返回null
     }
+
+	public static String getComponentID(String componentName) {
+		 QueryRunner runner = new QueryRunner();// 创建QueryRunner对象
+	     String sql = "select id_component from tb_component where name_component = '"+ componentName+"';";// 定义查询语句
+	     Connection conn = getConnection();// 获得连接
+	     //ResultSetHandler<String> rsh = new ColumnListHandler();// 创建结果集处理类
+	     String componentID = null;
+		try {
+			componentID = runner.query(conn, sql, new ScalarHandler<String>());
+			return componentID;
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+			return null;
+		}
+	}
 
 }
