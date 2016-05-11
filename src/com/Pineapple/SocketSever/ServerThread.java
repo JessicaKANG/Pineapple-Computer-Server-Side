@@ -2,6 +2,7 @@ package com.Pineapple.SocketSever;
 
 import java.io.DataInputStream;
 
+
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -12,9 +13,17 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Properties;
 
+import javax.mail.Authenticator;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 import javax.swing.JOptionPane;
-
 import com.Pineapple.Dao.DBAddorder;
 import com.Pineapple.Dao.DBCheckcomponent;
 import com.Pineapple.Dao.DBCheckcomputer;
@@ -207,9 +216,57 @@ public class ServerThread implements Runnable {
 		        			   if(DBAddorder.save(order)){
 		        				   out.writeUTF("True");
 		        				   out.flush();	
-		        				   JOptionPane.showMessageDialog(null,
+		        			/*	   JOptionPane.showMessageDialog(null,
 		   								"您有一条新订单待处理.", "订单提醒",
-		   								JOptionPane.INFORMATION_MESSAGE);
+		   								JOptionPane.INFORMATION_MESSAGE);*/
+		        				  ////////////////////////////////////////////////////////////////////////////
+		        				   //邮件发送订单详情
+		        				   	// 收件人电子邮箱
+		        				   	
+		        				      String to = DBClientLogin.getEmail(order.getClient());
+		        				      // 发件人电子邮箱
+		        				      String from = "computer.company.pineapple@gamil.com";
+		        				      // 指定发送邮件的主机为 localhost
+		        				      String host = "smtp.gmail.com";  // 邮件服务器
+		        				      // 获取系统属性
+		        				      Properties properties = System.getProperties();
+		        				      // 设置邮件服务器
+		        				      properties.setProperty("mail.smtp.host", host);
+		        				      properties.put("mail.smtp.auth", "true");
+		        				      properties.put("mail.smtp.starttls.enable", "true");
+		        				      properties.put("mail.smtp.port", "587");
+		        				      // 获取默认session对象
+		        				      Session session = Session.getDefaultInstance(properties,new Authenticator(){
+		        					    public PasswordAuthentication getPasswordAuthentication()
+		        					    {
+		        					     return new PasswordAuthentication("computer.company.pineapple@gmail.com", "pineapple123456"); //发件人邮件用户名、密码
+		        					    }
+		        					   });
+		        				      try{
+		        				         // 创建默认的 MimeMessage 对象
+		        				         MimeMessage message = new MimeMessage(session);
+		        				         // Set From: 头部头字段
+		        				         message.setFrom(new InternetAddress(from));
+		        				         // Set To: 头部头字段
+		        				         message.addRecipient(Message.RecipientType.TO,
+		        				                                  new InternetAddress(to));
+		        				         // Set Subject: 头部头字段
+		        				         message.setSubject("Order Confirmation");
+		        				         // 设置消息体
+		        				         message.setText("Dear,"+order.getClient()+"\n"+"Your order is being processing. The details are  as follows.\n"
+		        				         +"OrderID:"+order.getID()+"\n"
+		        				         +"Total Price: $"+order.getPrice()+"\n"
+		        				         +"Order Date:"+order.getDatetime()+"\n"
+		        				         +"Order State: To be shipped\n"
+		        				         +"Payment Method:"+order.getPayment()+"\n"
+		        				         +"Delivery Address:"+order.getDelivery()+"\n");
+		        				         // 发送消息
+		        				         Transport.send(message);		        		
+		        				      }catch (MessagingException mex) {
+		        				         mex.printStackTrace();
+		        				      }
+		        			       //////////////////////////////////////////////////////////邮件发送完毕
+		        			       
 		        			   }
 		        			   
 	        			   }        			   
@@ -228,7 +285,6 @@ public class ServerThread implements Runnable {
            //////////////////////////////////////////////////////////////////////////////
            //搜索可选配件
            else if (accept.equals("COMBOCOLOR")){
-        	   System.out.println("接收到COMBOCOLOR");
         	   List<String> itemlist = DBCheckcomponent.getComponentNameList("Color");
 	        	   try {
 					outBean = new ObjectOutputStream(socket.getOutputStream());
@@ -240,7 +296,6 @@ public class ServerThread implements Runnable {
 				}
            }
            else if (accept.equals("COMBOSIZE")){
-        	   System.out.println("接收到COMBOSIZE");
         	   List<String> itemlist = DBCheckcomponent.getComponentNameList("Screen");
 	        	   try {
 					outBean = new ObjectOutputStream(socket.getOutputStream());
@@ -252,7 +307,6 @@ public class ServerThread implements Runnable {
 				}
            }
            else if (accept.equals("COMBOSTOCK")){
-        	   System.out.println("接收到COMBOSTOCK");
         	   List<String> itemlist = DBCheckcomponent.getComponentNameList("Stock");
 	        	   try {
 					outBean = new ObjectOutputStream(socket.getOutputStream());
@@ -264,7 +318,6 @@ public class ServerThread implements Runnable {
 				}
            }
            else if (accept.equals("COMBOMEMORY")){
-        	   System.out.println("接收到COMBOMEMORY");
         	   List<String> itemlist = DBCheckcomponent.getComponentNameList("Memory");
 	        	   try {
 					outBean = new ObjectOutputStream(socket.getOutputStream());
@@ -276,7 +329,6 @@ public class ServerThread implements Runnable {
 				}
            }
            else if (accept.equals("COMBOGRAPHIC")){
-        	   System.out.println("接收到COMBOGRAPHIC");
         	   List<String> itemlist = DBCheckcomponent.getComponentNameList("Graphics");
 	        	   try {
 					outBean = new ObjectOutputStream(socket.getOutputStream());
@@ -288,7 +340,6 @@ public class ServerThread implements Runnable {
 				}
            }
            else if (accept.equals("COMBOPROCESSOR")){
-        	   System.out.println("接收到COMBOPROCESSOR");
         	   List<String> itemlist = DBCheckcomponent.getComponentNameList("Processor");
 	        	   try {
 					outBean = new ObjectOutputStream(socket.getOutputStream());
@@ -301,7 +352,6 @@ public class ServerThread implements Runnable {
            }
            //获得新价格
            else if (accept.equals("NEWPRICE")){
-        	   System.out.println("接收到NEWPRICE");
 	        	   try {
 	        		   	in = new DataInputStream(socket.getInputStream());    
 	        		   	String itemname = in.readUTF();
