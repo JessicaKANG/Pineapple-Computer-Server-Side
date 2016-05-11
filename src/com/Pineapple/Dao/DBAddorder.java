@@ -40,7 +40,7 @@ public class DBAddorder implements DBConfig{
      */
     public static boolean save(Order order) {
         QueryRunner runner = new QueryRunner();// 创建QueryRunner对象
-        String sql = "insert into tb_order (id_order,price_order,date_order,state_order,id_client) values (?, ?, ?, ?,?);";// 定义查询语句
+        String sql = "insert into tb_order (id_order,price_order,date_order,state_order,id_client,payment,delivery) values (?, ?, ?, ?,?,?,?);";// 定义查询语句
         Connection conn = getConnection();// 获得连接
         String sql2 = "select id_client from tb_client where name_client = '"+order.getClient()+"';";
         try {
@@ -49,7 +49,7 @@ public class DBAddorder implements DBConfig{
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}// 获得查询结果
-        Object[] params = { order.getID(),order.getPrice(),order.getDatetime(),order.getState(),id_client};// 获得传递的参数
+        Object[] params = { order.getID(),order.getPrice(),order.getDatetime(),order.getState(),id_client,order.getPayment(),order.getDelivery()};// 获得传递的参数
         try {
             int result = runner.update(conn, sql, params);// 保存用户
             if (result > 0) {// 如果保存成功返回true

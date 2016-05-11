@@ -6,5 +6,7 @@
 	<classpathentry kind="lib" path="/Users/Jessica/Desktop/mysql-connector-java-5.1.38/mysql-connector-java-5.1.38-bin.jar"/>
 	<classpathentry kind="lib" path="/Users/Jessica/Desktop/commons-dbutils-1.6/commons-dbutils-1.6.jar"/>
 	<classpathentry kind="lib" path="/Users/Jessica/Downloads/Eclipse.app/Contents/Eclipse/plugins/org.apache.commons.lang_2.6.0.v201404270220.jar"/>
+	<classpathentry kind="lib" path="/Users/Jessica/Downloads/Eclipse.app/Contents/Eclipse/plugins/activation.jar"/>
+	<classpathentry kind="lib" path="/Users/Jessica/Downloads/Eclipse.app/Contents/Eclipse/plugins/javax.mail.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
