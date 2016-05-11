@@ -163,20 +163,27 @@ public class DBCheckstock implements DBConfig{
    	 	QueryRunner runner = new QueryRunner();// 创建QueryRunner对象
 	     String sql = "select number_stock from tb_stock where id_component = '"+ componentID+"';";// 定义查询语句
 	     Connection conn = getConnection();// 获得连接	     
-	     //ResultSetHandler<Integer> rsh = new ColumnListHandler();// 创建结果集处理类
-	     try {	    	 	
-	    	 	int result = runner.query(conn, sql, new ScalarHandler<Integer>());// 获得查询结果
-	            if (result > number) {// 如果列表中存在数据
-	                return true;// 返回true
-	            } else {// 如果列表中没有数据
-	                return false;// 返回false
-	            }
+	     
+	     try {	
+	    	 		boolean checkexist = DBCheckstock.exists(componentID);
+	    	 		if(checkexist){
+	    	 			int result = runner.query(conn, sql, new ScalarHandler<Integer>());// 获得查询结果
+	    	 			if (result > number) {// 如果列表中存在数据
+	    	 				return true;// 返回true
+	    	 			} else {// 如果列表中没有数据
+	    	 				return false;// 返回false
+	    	 			}
+	    	 		}
+	    	 		else{
+	    	 			return false;// 返回false
+	    	 		}	    	 	
 	        } catch (SQLException e) {
 	            e.printStackTrace();
+	            return false;// 如果发生异常返回false
 	        } finally {
 	            DbUtils.closeQuietly(conn);// 关闭连接
 	        }
-	        return false;// 如果发生异常返回false
+	        
     }
     public static void modifycpt(String componentName, int number){
     	Map<String, String> map = new HashMap<String, String>();
@@ -207,5 +214,25 @@ public class DBCheckstock implements DBConfig{
 	        } finally {
 	            DbUtils.closeQuietly(conn);// 关闭连接
 	        }
+    }
+    
+    public static boolean exists(String componentID) {
+        QueryRunner runner = new QueryRunner();// 创建QueryRunner对象
+        String sql = "select id_component from tb_stock where id_component = '" + componentID + "';";// 定义查询语句
+        Connection conn = getConnection();// 获得连接
+        ResultSetHandler<List<Object>> rsh = new ColumnListHandler();// 创建结果集处理类
+        try {
+            List<Object> result = runner.query(conn, sql, rsh);// 获得查询结果
+            if (result.size() > 0) {// 如果列表中存在数据
+                return true;// 返回true
+            } else {// 如果列表中没有数据
+                return false;// 返回false
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            DbUtils.closeQuietly(conn);// 关闭连接
+        }
+        return false;// 如果发生异常返回false
     }
 }

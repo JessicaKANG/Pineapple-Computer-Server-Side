@@ -7,7 +7,7 @@ public class Computer implements Serializable{
 	private String id;// 型号
     private String name;// 商品名
     private String type;// 商品类型
-    private float price;// 商品价格 
+    private double price;// 商品价格 
     private String picture;// 商品图片地址
     private String stock;
     private String memory;
@@ -45,11 +45,11 @@ public class Computer implements Serializable{
     }
     
   //获取price方法
-    public float getPrice() {
+    public double getPrice() {
         return price;
     }
     //设置price方法
-    public void setPrice(float price) {
+    public void setPrice(double price) {
         this.price = price;
     }
     

@@ -16,6 +16,7 @@ import java.util.Map.Entry;
 import javax.swing.JOptionPane;
 
 import com.Pineapple.Dao.DBAddorder;
+import com.Pineapple.Dao.DBCheckcomponent;
 import com.Pineapple.Dao.DBCheckcomputer;
 import com.Pineapple.Dao.DBCheckstock;
 import com.Pineapple.Dao.DBClientLogin;
@@ -152,12 +153,15 @@ public class ServerThread implements Runnable {
 	        			   computerID = (String)iterator.next();	        			   
 	        			   check = DBCheckstock.checkcpr(computerID);
 	        			   if(!check){
-	        				   return;
+	        				   out = new DataOutputStream(socket.getOutputStream());
+		        			   out.writeUTF("False");
+		        			   out.flush();			        			
+	        				   break;
 	        			   }
 	        		   }	        		   
-	        		   if (check){	
+	        		   if (check){	//电脑库存核查完毕，开始核查配件库存
 	        			   Map<String,Integer> map = new HashMap<String,Integer>();        			   
-	        			   for (int m=0;m<componentlist.size();m++){
+	        			   for (int m=0;m<componentlist.size();m++){//把componentlist 变成map
 	        				   int p = map.getOrDefault(componentlist.get(m), 0);
 	        				   if(p==0){
 	        					   map.put(componentlist.get(m), 1);
@@ -172,16 +176,19 @@ public class ServerThread implements Runnable {
 	        			   }
 	        			   Iterator<Map.Entry<String, Integer>> entries = map.entrySet().iterator();
 	        			   while (entries.hasNext()){
-	        				   check = false;
 	        				   Entry<String, Integer> entry = entries.next();
-	        				   check = DBCheckstock.checkcpt(entry.getKey(), entry.getValue());
+	        				   check = DBCheckstock.checkcpt(entry.getKey(), entry.getValue());	        				  
 	        				   if(!check){
-	        					   return;
+	        					   out = new DataOutputStream(socket.getOutputStream());
+			        			   out.writeUTF("False");
+			        			   out.flush();		        					   
+			        			   break;
 	        				   }
-	        			   }
+	        			   }//配件库存和电脑库存都核查完毕
+	        			   
 	        			   if(check){
 	        				   out = new DataOutputStream(socket.getOutputStream());
-	        				   out.writeUTF("True");
+	        				   out.writeUTF("True");//核查库存后判断是否弹出付款对话框和更改库存
 	        				   out.flush();	
 		        			   Iterator iterator2 = computerlist.iterator();
 		        			   while(iterator2.hasNext()){
@@ -194,6 +201,7 @@ public class ServerThread implements Runnable {
 		        				   Entry<String, Integer> entry2 = entries2.next();
 		        				   DBCheckstock.modifycpt(entry2.getKey(),entry2.getValue());
 		        			   }//配件库存修改
+		        			   System.out.println("库存修改完毕");
 		        			   inBean = new ObjectInputStream(socket.getInputStream());
 		        			   Order order = (Order)inBean.readObject();
 		        			   if(DBAddorder.save(order)){
@@ -204,20 +212,10 @@ public class ServerThread implements Runnable {
 		   								JOptionPane.INFORMATION_MESSAGE);
 		        			   }
 		        			   
-	        			   }
-	        			   else {
-		        			   out = new DataOutputStream(socket.getOutputStream());
-		        			   out.writeUTF("False");
-		        			   out.flush();	        			   
-		        		   }
+	        			   }        			   
+	        			   
 	        		   }
-	        		   else {
-	        			   out = new DataOutputStream(socket.getOutputStream());
-	        			   out.writeUTF("False");
-	        			   out.flush();	        			   
-	        		   }
-	        		   
-	        		   
+	        		   	        		   	        		   
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -226,6 +224,97 @@ public class ServerThread implements Runnable {
 					e.printStackTrace();
 				}
         	   
+           }
+           //////////////////////////////////////////////////////////////////////////////
+           //搜索可选配件
+           else if (accept.equals("COMBOCOLOR")){
+        	   System.out.println("接收到COMBOCOLOR");
+        	   List<String> itemlist = DBCheckcomponent.getComponentNameList("Color");
+	        	   try {
+					outBean = new ObjectOutputStream(socket.getOutputStream());
+					outBean.writeObject(itemlist);
+					outBean.flush();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+           }
+           else if (accept.equals("COMBOSIZE")){
+        	   System.out.println("接收到COMBOSIZE");
+        	   List<String> itemlist = DBCheckcomponent.getComponentNameList("Screen");
+	        	   try {
+					outBean = new ObjectOutputStream(socket.getOutputStream());
+					outBean.writeObject(itemlist);
+					outBean.flush();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+           }
+           else if (accept.equals("COMBOSTOCK")){
+        	   System.out.println("接收到COMBOSTOCK");
+        	   List<String> itemlist = DBCheckcomponent.getComponentNameList("Stock");
+	        	   try {
+					outBean = new ObjectOutputStream(socket.getOutputStream());
+					outBean.writeObject(itemlist);
+					outBean.flush();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+           }
+           else if (accept.equals("COMBOMEMORY")){
+        	   System.out.println("接收到COMBOMEMORY");
+        	   List<String> itemlist = DBCheckcomponent.getComponentNameList("Memory");
+	        	   try {
+					outBean = new ObjectOutputStream(socket.getOutputStream());
+					outBean.writeObject(itemlist);
+					outBean.flush();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+           }
+           else if (accept.equals("COMBOGRAPHIC")){
+        	   System.out.println("接收到COMBOGRAPHIC");
+        	   List<String> itemlist = DBCheckcomponent.getComponentNameList("Graphics");
+	        	   try {
+					outBean = new ObjectOutputStream(socket.getOutputStream());
+					outBean.writeObject(itemlist);
+					outBean.flush();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+           }
+           else if (accept.equals("COMBOPROCESSOR")){
+        	   System.out.println("接收到COMBOPROCESSOR");
+        	   List<String> itemlist = DBCheckcomponent.getComponentNameList("Processor");
+	        	   try {
+					outBean = new ObjectOutputStream(socket.getOutputStream());
+					outBean.writeObject(itemlist);
+					outBean.flush();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+           }
+           //获得新价格
+           else if (accept.equals("NEWPRICE")){
+        	   System.out.println("接收到NEWPRICE");
+	        	   try {
+	        		   	in = new DataInputStream(socket.getInputStream());    
+	        		   	String itemname = in.readUTF();
+	        		   	String precomponentname = in.readUTF();
+	        		   	double price = in.readDouble();
+	        		   	double newPrice = DBCheckcomponent.getnewPrice(itemname,precomponentname,price);
+						outBean = new ObjectOutputStream(socket.getOutputStream());
+						outBean.writeObject(newPrice);
+						outBean.flush();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
            }
            /////////////////////////////////////////////////////////////////////////////
            try  

@@ -3,6 +3,7 @@ package com.Pineapple.Dao;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -92,6 +93,63 @@ public class DBCheckcomponent implements DBConfig{
 			e1.printStackTrace();
 			return null;
 		}
+	}
+	public static String getComponentType(String componentName) {
+		 QueryRunner runner = new QueryRunner();// 创建QueryRunner对象
+	     String sql = "select type_component from tb_component where name_component = '"+ componentName+"';";// 定义查询语句
+	     Connection conn = getConnection();// 获得连接
+	     //ResultSetHandler<String> rsh = new ColumnListHandler();// 创建结果集处理类
+	     String componentType = null;
+		try {
+			componentType = runner.query(conn, sql, new ScalarHandler<String>());
+			return componentType;
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+			return null;
+		}
+	}
+	public static double getComponentPrice(String componentName) {
+		 QueryRunner runner = new QueryRunner();// 创建QueryRunner对象
+	     String sql = "select price_component from tb_component where name_component = '"+ componentName+"';";// 定义查询语句
+	     Connection conn = getConnection();// 获得连接
+	     //ResultSetHandler<String> rsh = new ColumnListHandler();// 创建结果集处理类
+	     double componentPrice = 0;
+		try {
+			componentPrice = runner.query(conn, sql, new ScalarHandler<Double>());
+			return componentPrice;
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+			return 0;
+		}
+	}
+	public static List<String> getComponentNameList(String type){
+		 QueryRunner runner = new QueryRunner();// 创建QueryRunner对象
+	     String sql = "select name_component from tb_component where type_component = '"+type+"';";// 定义查询语句
+	     Connection conn = getConnection();// 获得连接
+	     ResultSetHandler<List<String>> rsh = new ColumnListHandler<String>();// 创建结果集处理类
+	     
+		try {
+			List<String> result = (List<String>)runner.query(conn, sql, rsh);// 获得查询结果
+			return result;
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+			return null;
+		}
+	}
+	
+	public static double getnewPrice(String itemname,String precomponentname,double price){
+		String type_component = DBCheckcomponent.getComponentType(itemname);
+		double price_component = DBCheckcomponent.getComponentPrice(itemname);
+		
+		double pre_price = DBCheckcomponent.getComponentPrice(precomponentname);
+		double newPrice = 0;				
+			 newPrice = price + (price_component - pre_price);
+		
+		
+		return newPrice;
 	}
 
 }
