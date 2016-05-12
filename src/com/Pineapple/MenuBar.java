@@ -165,7 +165,7 @@ public class MenuBar extends JMenuBar {
 					"/res/icon/ordertocheck.png")));
 			ordertocheckItem.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					//createIFrame(ordertocheckItem, ordertocheck_IFrame.class);//鼠标监听，打开内部窗口
+					createIFrame(ordertocheckItem, CheckActiveOrder.class);//鼠标监听，打开内部窗口
 				}
 			});
 		}
@@ -186,7 +186,7 @@ public class MenuBar extends JMenuBar {
 			checkorderItem
 					.addActionListener(new java.awt.event.ActionListener() {
 						public void actionPerformed(java.awt.event.ActionEvent e) {
-							//createIFrame(checkorderItem, checkorder_IFrame.class);
+							createIFrame(checkorderItem, CheckDeadOrder.class);
 						}
 					});
 		}

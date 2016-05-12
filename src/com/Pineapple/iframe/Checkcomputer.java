@@ -23,6 +23,7 @@ import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
 
 import com.Pineapple.Dao.DBCheckcomputer;
 import com.Pineapple.Dao.model.Computer;
@@ -51,6 +52,10 @@ public class Checkcomputer extends JInternalFrame{
 		String[] tableHeads = new String[]{"图片","型号", "名称", "类型", "价格","颜色","屏幕尺寸","硬盘","内存","显卡","处理器"};//添加表头
 		dftm.setColumnIdentifiers(tableHeads);//把表头设置为每栏的标示
 		
+			TableColumn column = null;	//把电脑名一栏画大一点	
+		    column = table.getColumnModel().getColumn(2);
+		    column.setPreferredWidth(100);
+		   
 		//把表格放置到有滚动条的面板上,控制表格位置
 		final JScrollPane scrollPane = new JScrollPane(table);
 		final GridBagConstraints gridBagConstraints_6 = new GridBagConstraints();
@@ -91,6 +96,7 @@ public class Checkcomputer extends JInternalFrame{
 		});
 		setupComponet(showAllButton, 5, 0, 1, 1, false);
 		showAllButton.setText("显示全部商品");
+		showAllButton.doClick();
 	}
 	
 	/**

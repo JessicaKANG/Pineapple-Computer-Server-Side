@@ -9,6 +9,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Iterator;
+import java.util.List;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -19,6 +21,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import com.Pineapple.Dao.DBAddcomputer;
+import com.Pineapple.Dao.DBCheckcomponent;
 import com.Pineapple.Dao.model.Computer;
 
 public class Addcomputerpanel extends JPanel {
@@ -80,13 +83,6 @@ public class Addcomputerpanel extends JPanel {
 		comboboxType.setModel(new DefaultComboBoxModel(new String[]{"DESKTOP",
 				"LAPTOP", "SERVER"}));
 		comboboxType.setPreferredSize(new Dimension(120, 21));
-		//initComboBox();// 初始化下拉选择框
-		// 处理电脑分类的下拉选择框的选择事件
-		//		comboboxType.addActionListener(new ActionListener() {
-		//			public void actionPerformed(ActionEvent e) {
-		//				//doKeHuSelectAction();
-		//			}
-		//		});
 		// 定位电脑分类的下拉选择框
 		setupComponent(comboboxType, 4, 2, 1, 0, true);
 		//////////////////////////////////////////////////////////
@@ -98,14 +94,9 @@ public class Addcomputerpanel extends JPanel {
 		configColor.setText("颜色:");
 		setupComponent(configColor,0,4,1,0,false);
 		comboboxColor = new JComboBox();
+		List<String> colorlist = searchitemlist("Color");
+		setupCombo(comboboxColor,colorlist);		
 		comboboxColor.setPreferredSize(new Dimension(120, 21));
-		//initComboBox();// 初始化下拉选择框
-		// 处理电脑分类的下拉选择框的选择事件
-				comboboxColor.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						//doKeHuSelectAction();
-					}
-				});
 		// 定位
 		setupComponent(comboboxColor, 1, 4, 1, 0, true);
 		//*********************************************
@@ -113,14 +104,9 @@ public class Addcomputerpanel extends JPanel {
 		configSize.setText("尺寸:");
 		setupComponent(configSize,3,4,1,0,false);
 		comboboxSize = new JComboBox();
+		List<String> sizelist = searchitemlist("Screen");
+		setupCombo(comboboxSize,sizelist);
 		comboboxSize.setPreferredSize(new Dimension(120, 21));
-		//initComboBox();// 初始化下拉选择框
-		// 处理电脑分类的下拉选择框的选择事件
-				comboboxSize.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						//doKeHuSelectAction();
-					}
-				});
 		// 定位
 		setupComponent(comboboxSize, 4, 4, 1, 0, true);
 
@@ -129,14 +115,9 @@ public class Addcomputerpanel extends JPanel {
 		configStock.setText("硬盘:");
 		setupComponent(configStock,0,5,1,0,false);
 		comboboxStock = new JComboBox();
+		List<String> stocklist = searchitemlist("Stock");
+		setupCombo(comboboxStock,stocklist);
 		comboboxStock.setPreferredSize(new Dimension(120, 21));
-		//initComboBox();// 初始化下拉选择框
-		// 处理电脑分类的下拉选择框的选择事件
-				comboboxStock.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						//doKeHuSelectAction();
-					}
-				});
 		// 定位
 		setupComponent(comboboxStock, 1, 5, 1, 0, true);
 		//*********************************************
@@ -144,14 +125,9 @@ public class Addcomputerpanel extends JPanel {
 		configMemory.setText("内存:");
 		setupComponent(configMemory,3,5,1,0,false);
 		comboboxMemory = new JComboBox();
+		List<String> memorylist = searchitemlist("Memory");
+		setupCombo(comboboxMemory,memorylist);
 		comboboxMemory.setPreferredSize(new Dimension(120, 21));
-		//initComboBox();// 初始化下拉选择框
-		// 处理电脑分类的下拉选择框的选择事件
-				comboboxMemory.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						//doKeHuSelectAction();
-					}
-				});
 		// 定位
 		setupComponent(comboboxMemory, 4, 5, 1, 0, true);
 		//////////////////////////////////////////////////////////
@@ -159,14 +135,9 @@ public class Addcomputerpanel extends JPanel {
 		configGraphics.setText("显卡:");
 		setupComponent(configGraphics,0,6,1,0,false);
 		comboboxGraphics = new JComboBox();
+		List<String> graphicslist = searchitemlist("Graphics");
+		setupCombo(comboboxGraphics,graphicslist);
 		comboboxGraphics.setPreferredSize(new Dimension(120, 21));
-		//initComboBox();// 初始化下拉选择框
-		// 处理电脑分类的下拉选择框的选择事件
-				comboboxGraphics.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						//doKeHuSelectAction();
-					}
-				});
 		// 定位
 		setupComponent(comboboxGraphics, 1, 6, 1, 0, true);
 		//*********************************************
@@ -174,14 +145,9 @@ public class Addcomputerpanel extends JPanel {
 		configProcessor.setText("处理器:");
 		setupComponent(configProcessor,3,6,1,0,false);
 		comboboxProcessor = new JComboBox();
+		List<String> processorlist = searchitemlist("Processor");
+		setupCombo(comboboxProcessor,processorlist);
 		comboboxProcessor.setPreferredSize(new Dimension(120, 21));
-		//initComboBox();// 初始化下拉选择框
-		// 处理电脑分类的下拉选择框的选择事件
-				comboboxProcessor.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						//doKeHuSelectAction();
-					}
-				});
 		// 定位
 		setupComponent(comboboxProcessor, 4, 6, 1, 0, true);
 		///////////////////////////////////////////////////////////////////
@@ -193,6 +159,15 @@ public class Addcomputerpanel extends JPanel {
 		setupComponent(textFieldPicture, 1, 7, 5, 100, true);
 		
 /////////////////////////////////////////////////////////////////////////////////////////////
+		//初始化下拉菜单
+		comboboxType.setSelectedItem(null);
+		comboboxColor.setSelectedItem(null);
+		comboboxSize.setSelectedItem(null);
+		comboboxStock.setSelectedItem(null);
+		comboboxMemory.setSelectedItem(null);
+		comboboxGraphics.setSelectedItem(null);
+		comboboxProcessor.setSelectedItem(null);
+///////////////////////////////////////////////////////////////////////////////////////////
 		//添加按钮
 		final JButton addButton = new JButton();
 		//添加按钮的事件监听
@@ -228,9 +203,33 @@ public class Addcomputerpanel extends JPanel {
 				computer.setType(comboboxType.getSelectedItem().toString());
 				computer.setPrice(Float.parseFloat(textFieldPrice.getText()));
 				computer.setPicture(textFieldPicture.getText());
+				String id_computer = textFieldID.getText();
+				
+				String name_color = comboboxColor.getSelectedItem().toString();
+				String id_color = DBCheckcomponent.getComponentID(name_color);
+				
+				String name_size = comboboxSize.getSelectedItem().toString();
+				String id_size = DBCheckcomponent.getComponentID(name_size);
+
+				String name_stock = comboboxStock.getSelectedItem().toString();
+				String id_stock = DBCheckcomponent.getComponentID(name_stock);
+
+				String name_memory = comboboxMemory.getSelectedItem().toString();
+				String id_memory = DBCheckcomponent.getComponentID(name_memory);
+	
+				String name_graphics = comboboxGraphics.getSelectedItem().toString();
+				String id_graphics = DBCheckcomponent.getComponentID(name_graphics);
+
+				String name_processor = comboboxProcessor.getSelectedItem().toString();
+				String id_processor = DBCheckcomponent.getComponentID(name_processor);
 				
 				try {					
-					if (DBAddcomputer.save(computer)) {
+					if (DBAddcomputer.save(computer)&&DBAddcomputer.savecomputerconfig(id_computer, id_color)
+							&&DBAddcomputer.savecomputerconfig(id_computer, id_size)&&
+							DBAddcomputer.savecomputerconfig(id_computer, id_stock)&&
+							DBAddcomputer.savecomputerconfig(id_computer, id_memory)&&
+							DBAddcomputer.savecomputerconfig(id_computer, id_graphics)&&
+							DBAddcomputer.savecomputerconfig(id_computer, id_processor)) {
 						JOptionPane.showMessageDialog(Addcomputerpanel.this,
 								"恭喜，商品已成功添加入库", "商品添加成功",
 								JOptionPane.INFORMATION_MESSAGE);
@@ -258,7 +257,13 @@ public class Addcomputerpanel extends JPanel {
 						textFieldName.setText("");
 						textFieldPrice.setText("");
 						textFieldPicture.setText("");
-						
+						comboboxType.setSelectedItem(null);
+						comboboxColor.setSelectedItem(null);
+						comboboxSize.setSelectedItem(null);
+						comboboxStock.setSelectedItem(null);
+						comboboxMemory.setSelectedItem(null);
+						comboboxGraphics.setSelectedItem(null);
+						comboboxProcessor.setSelectedItem(null);
 					}
 				});
 				
@@ -289,6 +294,31 @@ public class Addcomputerpanel extends JPanel {
 		add(component, gridBagConstrains);
 		
 		
+	}
+	
+	/**
+	 * 把项目串放到combobox里
+	 * @param combobox
+	 * @param itemstring
+	 */
+	public void setupCombo (JComboBox comboBox, List<String> itemlist){
+		Iterator iterator = itemlist.iterator();
+		while(iterator.hasNext()){
+			String item = (String) iterator.next();
+			comboBox.addItem(item);
+		}
+		
+	}
+	/**
+	 * 向数据库查询配件可选项
+	 * @param name
+	 * @return
+	 */
+	public List<String> searchitemlist(String name){
+    	    List<String> itemlist = null ;
+    	    itemlist = DBCheckcomponent.getComponentNameList(name);
+    	    return itemlist;
+			
 	}
 	
 
