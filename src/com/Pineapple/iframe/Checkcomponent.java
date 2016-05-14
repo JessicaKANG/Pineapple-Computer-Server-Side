@@ -85,6 +85,7 @@ public class Checkcomponent extends JInternalFrame{
 		});
 		setupComponet(showAllButton, 5, 0, 1, 1, false);
 		showAllButton.setText("显示全部配件");
+		showAllButton.doClick();
 	}
 	
 	/**
