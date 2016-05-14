@@ -9,7 +9,9 @@ import java.net.Socket;
 import java.sql.Timestamp;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Vector;
+import java.util.Map.Entry;
 
 import javax.swing.JButton;
 import javax.swing.JComponent;
@@ -22,6 +24,7 @@ import javax.swing.table.TableColumn;
 
 import com.Pineapple.MainFrame;
 import com.Pineapple.Dao.DBAddorder;
+import com.Pineapple.Dao.DBCheckstock;
 import com.Pineapple.Dao.model.Computer;
 import com.Pineapple.Dao.model.Order;
 
@@ -114,7 +117,7 @@ public class CheckActiveOrder extends JInternalFrame{
 					 Boolean checked = Boolean.valueOf(table.getValueAt(j,0).toString()) ;//检查该行是否被选中
 					 if(checked){//如果被选中，则执行：则操作数据库改变订单状态；
 						String id_order = table.getValueAt(j, 2).toString();
-						DBAddorder.ChangeOrderState(id_order);							
+						DBAddorder.ChangeOrderState(id_order,"1");									
 					 }
 				  }
 				  List<Order> orderList= DBAddorder.getActiveOrderList();
