@@ -162,7 +162,7 @@ public class MenuBar extends JMenuBar {
 			ordertocheckItem = new JMenuItem();
 			ordertocheckItem.setText("待处理订单");
 			ordertocheckItem.setIcon(new ImageIcon(getClass().getResource(
-					"/res/icon/ordertocheck.png")));
+					"/res/icon/ordertocheck.jpg")));
 			ordertocheckItem.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					createIFrame(ordertocheckItem, CheckActiveOrder.class);//鼠标监听，打开内部窗口
@@ -182,7 +182,7 @@ public class MenuBar extends JMenuBar {
 			checkorderItem = new JMenuItem();
 			checkorderItem.setText("查看订单");
 			checkorderItem.setIcon(new ImageIcon(getClass().getResource(
-					"/res/icon/checkorder.png")));
+					"/res/icon/checkorder.jpg")));
 			checkorderItem
 					.addActionListener(new java.awt.event.ActionListener() {
 						public void actionPerformed(java.awt.event.ActionEvent e) {
@@ -220,8 +220,8 @@ public class MenuBar extends JMenuBar {
 		if (editcomponentItem == null) {
 			editcomponentItem = new JMenuItem();
 			editcomponentItem.setText("配件资料管理");
-			//editcomponentItem.setIcon(new ImageIcon(getClass().getResource(
-			//		"/res/icon/editcomputer.png")));
+			editcomponentItem.setIcon(new ImageIcon(getClass().getResource(
+					"/res/icon/editcomponent.jpg")));
 			editcomponentItem.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					createIFrame(editcomponentItem, Editcomponent.class);//鼠标监听，打开内部窗口
@@ -240,8 +240,8 @@ public class MenuBar extends JMenuBar {
 		if (checkcomponentItem == null) {
 			checkcomponentItem = new JMenuItem();
 			checkcomponentItem.setText("查看配件");
-			//checkcomponentItem.setIcon(new ImageIcon(getClass().getResource(
-			//		"/res/icon/checkcomputer.png")));
+			checkcomponentItem.setIcon(new ImageIcon(getClass().getResource(
+					"/res/icon/checkcomponent.jpg")));
 			checkcomponentItem
 					.addActionListener(new java.awt.event.ActionListener() {
 						public void actionPerformed(java.awt.event.ActionEvent e) {
@@ -278,7 +278,7 @@ public class MenuBar extends JMenuBar {
 			editcomputerItem = new JMenuItem();
 			editcomputerItem.setText("商品资料管理");
 			editcomputerItem.setIcon(new ImageIcon(getClass().getResource(
-					"/res/icon/editcomputer.png")));
+					"/res/icon/editcomputer.jpg")));
 			editcomputerItem.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					createIFrame(editcomputerItem, Editcomputer.class);//鼠标监听，打开内部窗口
@@ -298,7 +298,7 @@ public class MenuBar extends JMenuBar {
 			checkcomputerItem = new JMenuItem();
 			checkcomputerItem.setText("查看商品");
 			checkcomputerItem.setIcon(new ImageIcon(getClass().getResource(
-					"/res/icon/checkcomputer.png")));
+					"/res/icon/checkcomputer.jpg")));
 			checkcomputerItem
 					.addActionListener(new java.awt.event.ActionListener() {
 						public void actionPerformed(java.awt.event.ActionEvent e) {
@@ -336,7 +336,7 @@ public class MenuBar extends JMenuBar {
 			editstockItem = new JMenuItem();
 			editstockItem.setText("库存调整");
 			editstockItem.setIcon(new ImageIcon(getClass().getResource(
-					"/res/icon/editstock.png")));
+					"/res/icon/editstock.jpg")));
 			editstockItem.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					createIFrame(editstockItem, Editstock.class);//鼠标监听，打开内部窗口
@@ -356,7 +356,7 @@ public class MenuBar extends JMenuBar {
 			checkstockItem = new JMenuItem();
 			checkstockItem.setText("库存盘点");
 			checkstockItem.setIcon(new ImageIcon(getClass().getResource(
-					"/res/icon/checkstock.png")));
+					"/res/icon/checkstock.jpg")));
 			checkstockItem
 					.addActionListener(new java.awt.event.ActionListener() {
 						public void actionPerformed(java.awt.event.ActionEvent e) {

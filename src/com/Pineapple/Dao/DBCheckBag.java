@@ -113,6 +113,22 @@ public class DBCheckBag implements DBConfig{
 	        }
 		
 	}
+
+	public static List<Bag> getClientBagwithcondition(int id_client, String condition) {
+		QueryRunner runner = new QueryRunner();// 创建QueryRunner对象
+        String sql = "select * from tb_bag where clientID='"+id_client+"';";// 定义查询语句
+        Connection conn = getConnection();// 获得连接
+        ResultSetHandler<List<Bag>> rsh = new BeanListHandler<Bag>(Bag.class);// 创建结果集处理类
+        List<Bag> result;
+		try {
+			result = (List<Bag>)runner.query(conn, sql, rsh);
+			return result;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}// 获得查询结果
+		return null;
+	}
 	
 	
 

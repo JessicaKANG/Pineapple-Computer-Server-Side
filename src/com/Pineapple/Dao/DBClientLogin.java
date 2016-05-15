@@ -88,6 +88,30 @@ public class DBClientLogin implements DBConfig{
         }
         return false;// 如果发生异常返回false
     }
+    
+    public static boolean checkMailbox(String username, String mailbox) {
+        username = StringEscapeUtils.escapeSql(username);// 将用户输入的用户名转义
+        QueryRunner runner = new QueryRunner();// 创建QueryRunner对象
+        String sql = "select email_client from tb_client where name_client = '" + username + "';";// 定义查询语句
+        Connection conn = getConnection();// 获得连接
+        ResultSetHandler<Object> rsh = new ScalarHandler();// 创建结果集处理类
+        try {
+            String result = (String) runner.query(conn, sql, rsh);// 获得查询结果
+          
+            if (result.equals(mailbox)) {// 如果密码相同则返回true
+                
+                return true;
+            } else {// 如果密码不同则返回false
+                
+                return false;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            DbUtils.closeQuietly(conn);// 关闭连接
+        }
+        return false;// 如果发生异常返回false
+    }
     /**
      * 保存用户输入的注册信息
      *
@@ -137,6 +161,30 @@ public class DBClientLogin implements DBConfig{
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 			return 0;
+		}// 获得查询结果
+	}
+	public static boolean changePasswd(String client, String newpasswd) {
+		QueryRunner runner = new QueryRunner();// 创建QueryRunner对象       
+        Connection conn = getConnection();// 获得连接
+        String sql = "update tb_client set psd_client = '"+newpasswd+"'where name_client = '"+ client+"';";// 定义查询语句	     	
+        try {
+			 int q = runner.update(conn, sql);
+			 return true;
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+			return false;
+		}// 获得查询结果
+	}
+	public static boolean changeMailbox(String client, String newmailbox) {
+		QueryRunner runner = new QueryRunner();// 创建QueryRunner对象       
+        Connection conn = getConnection();// 获得连接
+        String sql = "update tb_client set email_client = '"+newmailbox+"'where name_client = '"+ client+"';";// 定义查询语句	     	
+        try {
+			 int q = runner.update(conn, sql);
+			 return true;
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+			return false;
 		}// 获得查询结果
 	}
 

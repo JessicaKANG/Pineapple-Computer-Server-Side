@@ -108,6 +108,68 @@ public class ServerThread implements Runnable {
                catch(IOException e)  
                { }  
            } 
+           else if(accept.equals("CHANGEPASSWORD"))  
+           { 
+        	   System.out.println("接收到CHANGEPASSWORD");
+               try  
+               {  
+            	// 向客户端发送信息的DataOutputStream    
+                   out = new DataOutputStream(socket.getOutputStream()); 
+                   in = new DataInputStream(socket.getInputStream());
+                     String client = in.readUTF(); 
+                     String oldpasswd = in.readUTF();
+                     if (DBClientLogin.check(username, oldpasswd)) {
+							out.writeUTF("true");   
+							out.flush();
+							String newpasswd = in.readUTF();
+							if(DBClientLogin.changePasswd(client,newpasswd)){
+		                    	 out.writeUTF("True");
+		                      	  out.flush();
+		                     }else{
+		                    	 out.writeUTF("False");
+		                      	  out.flush();
+		                     }                                        
+                     }
+						else{
+							out.writeUTF("false");
+							out.flush();
+							}  			
+                     
+               }
+               catch(IOException e)  
+               { }  
+           } 
+           else if(accept.equals("CHANGEMAILBOX"))  
+           { 
+        	   System.out.println("接收到CHANGEMAILBOX");
+               try  
+               {  
+            	// 向客户端发送信息的DataOutputStream    
+                   out = new DataOutputStream(socket.getOutputStream()); 
+                   in = new DataInputStream(socket.getInputStream());
+                     String client = in.readUTF(); 
+                     String oldmailbox = in.readUTF();
+                     if (DBClientLogin.checkMailbox(username, oldmailbox)) {
+							out.writeUTF("true");   
+							out.flush();
+							String newmailbox = in.readUTF();
+							if(DBClientLogin.changeMailbox(client,newmailbox)){
+		                    	 out.writeUTF("True");
+		                      	  out.flush();
+		                     }else{
+		                    	 out.writeUTF("False");
+		                      	  out.flush();
+		                     }                                        
+                     }
+						else{
+							out.writeUTF("false");
+							out.flush();
+							}  			
+                     
+               }
+               catch(IOException e)  
+               { }  
+           } 
            //////////////////////////////////////注册逻辑检测/////////////////////////////
            else if(accept.equals("SIGNUP"))  
            {
@@ -142,6 +204,21 @@ public class ServerThread implements Runnable {
         	   System.out.println("接收到SHOWALLCPR");
         	   List<Computer> list = DBCheckcomputer.select();
 	        	   try {
+					outBean = new ObjectOutputStream(socket.getOutputStream());
+					outBean.writeObject(list);
+					outBean.flush();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+        	   
+           }
+           else if(accept.equals("QUERY")){
+        	   System.out.println("接收到QUERY");        	   
+	        	   try {
+	        		   in = new DataInputStream(socket.getInputStream());   
+	                   String condition = in.readUTF(); 
+	                   List<Computer> list = DBCheckcomputer.selectwithcondition(condition);
 					outBean = new ObjectOutputStream(socket.getOutputStream());
 					outBean.writeObject(list);
 					outBean.flush();
