@@ -5,3 +5,5 @@ Basic techniques:
 * Access to database
 * Socket communication
 * Multithread control
+
+![alt text](https://raw.githubusercontent.com/JessicaKANG/Pineapple-Computer-Server-Side/master/Pineapple.png)
